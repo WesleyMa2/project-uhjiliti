@@ -1,8 +1,11 @@
 
 # Project Proposal 
+
 ## Project Name: Uhjiliti
+
 ## Members
 Edgar Sarkisian, Joey Sokolon, Wesley Ma
+
 ## Description
 A Project management app that combines a ticketing system, video chat, messaging, and other features commonly used in development projects (scrum poker, project board, etc).
 
@@ -20,6 +23,7 @@ A Project management app that combines a ticketing system, video chat, messaging
     - Supports video and audio, using WebRTC and p2p connections. 
 - Messaging with multiple channels
     - Each project will have multiple text channels where users can coordinate work or plan new features for the project. The text channels will support embedded code, images and emoticons. 
+    
 ### To be completed by Final version:
 - Tickets have deadlines
     - Tickets can have target completion dates.
