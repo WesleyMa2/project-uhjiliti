@@ -29,7 +29,7 @@
   ],
   "devDependencies": {
     "@material-ui/core": "^3.9.2",
-    "eslint": "^5.15.0",
+    "eslint": "^5.12.0",
     "nodemon": "^1.18.10",
     "reactstrap": "^7.1.0"
   }
