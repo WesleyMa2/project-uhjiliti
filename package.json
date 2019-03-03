@@ -10,6 +10,7 @@
     "react-scripts": "2.1.5"
   },
   "scripts": {
+    "fix": "eslint --ext .js,.jsx src/ server/",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -27,6 +28,7 @@
   ],
   "devDependencies": {
     "@material-ui/core": "^3.9.2",
+    "eslint": "^5.15.0",
     "nodemon": "^1.18.10",
     "reactstrap": "^7.1.0"
   }
