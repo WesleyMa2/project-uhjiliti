@@ -1,0 +1,23 @@
+.loginContainer {
+    height: 100vh;
+    width: 100vh;
+}
+
+.loginForm {
+    background-color: aliceblue;
+    padding: 50px;
+    margin: auto;
+}
+
+.center {
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    justify-content: center;
+}
+
+.verticalCenter {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
