@@ -1,10 +1,11 @@
 .loginContainer {
     height: 100vh;
-    width: 100vh;
+    width: 100wh;
+    background-image: url('../resources/business.jpg');
+    background-size: cover;
 }
 
 .loginForm {
-    background-color: aliceblue;
     padding: 50px;
     margin: auto;
 }
@@ -20,4 +21,9 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+#signin-btn{
+    margin-top: 20px;
+    color: white;
 }

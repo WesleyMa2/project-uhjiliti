@@ -29,18 +29,13 @@ class NavBar extends React.Component {
     const { classes } = this.props
     const { value } = this.state
     return (
-      <div>
-        <Switch>
-          Route
-        </Switch>
-        <div className={classes.root}>
-          <AppBar position="static">
-            <Tabs centered value={value} onChange={this.handleChange}>
-              <Tab label="Chat" component={Link} to="/chat" />
-              <Tab label="Board" component={Link} to="/board" />
-            </Tabs>
-          </AppBar>
-        </div>
+      <div className={classes.root}>
+        <AppBar position="static">
+          <Tabs centered value={value} onChange={this.handleChange}>
+            <Tab style={this.style} label="Chat" component={Link} to="/chat" />
+            <Tab label="Board" component={Link} to="/board" />
+          </Tabs>
+        </AppBar>
         <Switch>
           <Route path="/chat" exact component={Chat} />
           <Route path="/board" component={Board} />
