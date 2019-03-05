@@ -1,12 +1,8 @@
 const db = require('../database')
 const mongoose = require('mongoose')
-const Routes = require('./routes')
 const Schema = mongoose.Schema
 const crypto = require('crypto');
 const cookie = require('cookie');
-
-
-const routes = new Routes()
 
 const usersSchema = new Schema({
   username: String,
@@ -33,12 +29,12 @@ function generateHash (password, salt){
 
 
 // curl -d '{"username":"Test Username", "password":"123", "name":"Test Name"}' -H "Content-Type: application/json" -X POST http://localhost:3000/api/auth/signup/
-function registerUserHandler(req, res) {
+exports.signup = function(req, res) {
   
   let username = req.body.username;
   let password = req.body.password;
 
-  // Validate that username doesn't already exist, if not return error
+  // Validate that username doesn't already exist, if yes return error
   User.findOne( { "username" : username }, function(err, user) { 
     if (err) return res.status(500).end(err);
     if (user) return res.status(409).end("username " + username + " already exists");
@@ -64,10 +60,10 @@ function registerUserHandler(req, res) {
   });
 };
 
-routes.addRoute('post', '/api/auth/signup/', registerUserHandler);
+
 
 // curl -c cookie.txt -d '{"username":"Test Username", "password":"123", "name":"Test Name"}' -H "Content-Type: application/json" -X POST http://localhost:3000/api/auth/signin/
-function signinUserHandler(req, res) {
+exports.signin = function(req, res) {
   var username = req.body.username;
   var password = req.body.password;
 
@@ -76,6 +72,7 @@ function signinUserHandler(req, res) {
     if (!user) return res.status(401).end("access denied");
     if (user.hash !== generateHash(password, user.salt)) return res.status(401).end("access denied"); // invalid password
     // start a session
+    console.log("user " + user.username + " signed in");
     req.session.username = user.username;
     res.setHeader('Set-Cookie', cookie.serialize('username', user.username, {
           path : '/', 
@@ -85,10 +82,10 @@ function signinUserHandler(req, res) {
   });
 };
 
-routes.addRoute('post', '/api/auth/signin/', signinUserHandler);
+
 
 // curl -b cookie.txt -c cookie.txt localhost:3000/signout/
-function signoutHandler(req, res, next) {
+exports.signout = function (req, res) {
     req.session.destroy();
     res.setHeader('Set-Cookie', cookie.serialize('username', '', {
           path : '/', 
@@ -97,6 +94,3 @@ function signoutHandler(req, res, next) {
     res.redirect('/');
 };
 
-routes.addRoute('get', '/api/auth/signout/', signoutHandler)
-
-module.exports = routes.getRoutes()
