@@ -8,14 +8,6 @@ import './main.css'
 const styles = {}
 
 class App extends React.Component {
-  state = {
-    value: 0
-  }
-
-  handleChange = (event, value) => {
-    this.setState({ value })
-  }
-
   render() {
     return (
       <div>

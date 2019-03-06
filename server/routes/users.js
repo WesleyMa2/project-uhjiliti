@@ -1,8 +1,7 @@
-const db = require('../database')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const crypto = require('crypto');
-const cookie = require('cookie');
+const crypto = require('crypto')
+const cookie = require('cookie')
 
 const usersSchema = new Schema({
   username: String,
@@ -15,13 +14,13 @@ const usersSchema = new Schema({
 const User = mongoose.model('User', usersSchema)
 
 function generateSalt (){
-    return crypto.randomBytes(16).toString('base64');
+  return crypto.randomBytes(16).toString('base64')
 }
 
 function generateHash (password, salt){
-    var hash = crypto.createHmac('sha512', salt);
-    hash.update(password);
-    return hash.digest('base64');
+  var hash = crypto.createHmac('sha512', salt)
+  hash.update(password)
+  return hash.digest('base64')
 }
 
 // TODO: Validate that all parameters are there (username, name, password), if not return error
@@ -31,17 +30,17 @@ function generateHash (password, salt){
 // curl -d '{"username":"Test Username", "password":"123", "name":"Test Name"}' -H "Content-Type: application/json" -X POST http://localhost:3000/api/auth/signup/
 exports.signup = function(req, res) {
   
-  let username = req.body.username;
-  let password = req.body.password;
+  let username = req.body.username
+  let password = req.body.password
 
   // Validate that username doesn't already exist, if yes return error
-  User.findOne( { "username" : username }, function(err, user) { 
-    if (err) return res.status(500).end(err);
-    if (user) return res.status(409).end("username " + username + " already exists");
+  User.findOne( { 'username' : username }, function(err, user) { 
+    if (err) return res.status(500).end(err)
+    if (user) return res.status(409).end('username ' + username + ' already exists')
 
     // Hash the password 
-    var salt = generateSalt();
-    var hash = generateHash(password, salt);
+    var salt = generateSalt()
+    var hash = generateHash(password, salt)
     
     let newUser = new User({
       username: username,
@@ -53,44 +52,44 @@ exports.signup = function(req, res) {
 
     // write the user to the db
     newUser.save(function(err, user) {
-      if (err) return res.status(500).end(err);
-      res.json(user);
-    });
+      if (err) return res.status(500).end(err)
+      res.json(user)
+    })
 
-  });
-};
+  })
+}
 
 
 
 // curl -c cookie.txt -d '{"username":"Test Username", "password":"123", "name":"Test Name"}' -H "Content-Type: application/json" -X POST http://localhost:3000/api/auth/signin/
 exports.signin = function(req, res) {
-  var username = req.body.username;
-  var password = req.body.password;
+  var username = req.body.username
+  var password = req.body.password
 
-  User.findOne({"username": username}, function(err, user){
-    if (err) return res.status(500).end(err);
-    if (!user) return res.status(401).end("access denied");
-    if (user.hash !== generateHash(password, user.salt)) return res.status(401).end("access denied"); // invalid password
+  User.findOne({'username': username}, function(err, user){
+    if (err) return res.status(500).end(err)
+    if (!user) return res.status(401).end('access denied')
+    if (user.hash !== generateHash(password, user.salt)) return res.status(401).end('access denied') // invalid password
     // start a session
-    console.log("user " + user.username + " signed in");
-    req.session.username = user.username;
+    console.log('user ' + user.username + ' signed in')
+    req.session.username = user.username
     res.setHeader('Set-Cookie', cookie.serialize('username', user.username, {
-          path : '/', 
-          maxAge: 60 * 60 * 24 * 7 // 1 week in number of seconds
-    }));
-    return res.json("user " + user.username + " signed in");
-  });
-};
+      path : '/', 
+      maxAge: 60 * 60 * 24 * 7 // 1 week in number of seconds
+    }))
+    return res.json('user ' + user.username + ' signed in')
+  })
+}
 
 
 
 // curl -b cookie.txt -c cookie.txt localhost:3000/signout/
 exports.signout = function (req, res) {
-    req.session.destroy();
-    res.setHeader('Set-Cookie', cookie.serialize('username', '', {
-          path : '/', 
-          maxAge: 60 * 60 * 24 * 7 // 1 week in number of seconds
-    }));
-    res.redirect('/');
-};
+  req.session.destroy()
+  res.setHeader('Set-Cookie', cookie.serialize('username', '', {
+    path : '/', 
+    maxAge: 60 * 60 * 24 * 7 // 1 week in number of seconds
+  }))
+  res.redirect('/')
+}
 

@@ -17,11 +17,18 @@ function Board() {
 const styles = {}
 
 class NavBar extends React.Component {
-  state = {
-    value: 0
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      value: 0
+    }
+
+    this.handleChange = this.handleChange.bind(this)
   }
 
-  handleChange = (event, value) => {
+
+  handleChange (event, value) {
     this.setState({ value })
   }
 

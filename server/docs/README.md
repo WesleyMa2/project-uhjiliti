@@ -16,7 +16,7 @@
     - content-type: `application/json`
     - body: access denied
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"username":"alice","password":"alice"}' -c cookie.txt localhost:3000/signin/
+curl -H "Content-Type: application/json" -X POST -d '{"username":"alice","password":"alice"}' -c cookie.txt localhost:3000/api/auth/signin/
 ```
 
 
@@ -34,7 +34,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"username":"alice","passwo
     - content-type: `application/json`
     - body: username already exists
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"username":"alice","password":"alice"}' -c cookie.txt localhost:3000/signup/
+curl -H "Content-Type: application/json" -X POST -d '{"username":"alice","password":"alice"}' -c cookie.txt localhost:3000/api/auth/signup/
 ```
 
 - description: signout
@@ -44,5 +44,5 @@ curl -H "Content-Type: application/json" -X POST -d '{"username":"alice","passwo
     - content-type: `application/json`
     - body: user signed out
 ```
-curl -b cookie.txt -c cookie.txt http://localhost:3000/signout/
+curl -b cookie.txt -c cookie.txt http://localhost:3000/api/auth/signout/
 ```
