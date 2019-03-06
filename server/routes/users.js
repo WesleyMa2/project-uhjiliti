@@ -33,6 +33,11 @@ exports.signup = function(req, res) {
   let username = req.body.username
   let password = req.body.password
 
+  if (!username) return res.status(404).end('Username required')
+  if (!password) return res.status(404).end('Password required')
+  if (username === '') return res.status(404).end('Username cannot be empty')
+  if (password === '') return res.status(404).end('Password cannot be empty')
+
   // Validate that username doesn't already exist, if yes return error
   User.findOne( { 'username' : username }, function(err, user) { 
     if (err) return res.status(500).end(err)
@@ -65,11 +70,13 @@ exports.signup = function(req, res) {
 exports.signin = function(req, res) {
   var username = req.body.username
   var password = req.body.password
+  if (!username) return res.status(404).end('Username required')
+  if (!password) return res.status(404).end('Password required')
 
   User.findOne({'username': username}, function(err, user){
     if (err) return res.status(500).end(err)
-    if (!user) return res.status(401).end('access denied')
-    if (user.hash !== generateHash(password, user.salt)) return res.status(401).end('access denied') // invalid password
+    if (!user) return res.status(401).end('Access denied')
+    if (user.hash !== generateHash(password, user.salt)) return res.status(401).end('Access denied') // invalid password
     // start a session
     console.log('user ' + user.username + ' signed in')
     req.session.username = user.username

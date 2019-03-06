@@ -13,7 +13,7 @@ function ErrorText(props) {
   } else return null
 }
 
-class SignIn extends Component {
+class SignUp extends Component {
 
   constructor(props) {
     super(props)
@@ -23,31 +23,31 @@ class SignIn extends Component {
       error: false,
       errorMessage: ''
     }
-
+    
     this.setUsername = this.setUsername.bind(this)
     this.setPassword = this.setPassword.bind(this)
-    this.login = this.login.bind(this)
+    this.register = this.register.bind(this)
   }
-
+    
   setUsername(event) {
     const value = event.target.value
     this.setState({username: value})
   }
-  
+      
   setPassword(event) {
     const value = event.target.value
     this.setState({password: value})
   }
-
-  login() {
-    axios.post('/api/auth/signin', {username: this.state.username, password: this.state.password}).then(()=>{
+    
+  register() {
+    axios.post('/api/auth/signup', {username: this.state.username, password: this.state.password}).then(()=>{
       window.location.href = window.location.origin + '/board'
     }).catch((err)=>{
       this.setState({error: true, errorMessage: `Error: [${err.response.status}] ${err.response.data}`})
     })
     console.log(`Login button clicked! ${this.state.username}, ${this.state.password}`)
   }
-
+    
   render() {
     return (
       <Container fluid className="loginContainer verticalCenter">
@@ -84,16 +84,17 @@ class SignIn extends Component {
                 variant="contained" 
                 color="primary"
                 size="large"
-                onClick={this.login}>
-              Sign In
+                onClick={this.register}>
+                  Register
               </Button>
             </div>
           </div>
-          <div className="center">Don't have an account? Sign up <Link to="/register"> here! </Link></div>
+          <div className="center">Already have an account? Click <Link to="/signin"> here! </Link></div>
         </Jumbotron>        
       </Container>
     )
   }
 }
 
-export default SignIn
+export default SignUp
+

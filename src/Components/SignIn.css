@@ -8,6 +8,7 @@
 .loginForm {
     padding: 50px;
     margin: auto;
+    width: 400px;
 }
 
 .center {
@@ -24,6 +25,16 @@
 }
 
 #signin-btn{
-    margin-top: 20px;
     color: white;
+}
+
+.btn-container {
+    padding-top: 20px;
+    margin-bottom: 20px;
+}
+
+.smallError {
+    color: red;
+    font-size: 13px;
+    padding-bottom: 10px;
 }
