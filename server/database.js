@@ -4,7 +4,7 @@ const env = require('../env')
 //Set up default mongoose connection
 const mongoConnectString = `mongodb+srv://system:${env.mongodbpass}@cluster0-lyast.mongodb.net/test?retryWrites=true`
 
-mongoose.connect(mongoConnectString, { useNewUrlParser: true })
+mongoose.connect(mongoConnectString, { useNewUrlParser: true, useFindAndModify: false })
 
 const db = mongoose.connection
 

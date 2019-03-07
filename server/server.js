@@ -5,6 +5,7 @@ const port = process.env.PORT || 4000
 const cookie = require('cookie')
 const session = require('express-session')
 const users = require('./routes/users')
+const projects = require('./routes/projects')
 require('./database')
 
 app.use(bodyParser.json())
@@ -40,5 +41,9 @@ app.use(function (req, res, next){
 app.post('/api/auth/signup/', users.signup)
 app.post('/api/auth/signin/', users.signin)
 app.get('/api/auth/signout/', users.signout)
+
+// PROJECTS
+app.post('/api/projects/', projects.createProject)
+app.post('/api/projects/:projectId/tickets/', projects.createTicket)
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

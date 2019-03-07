@@ -1,17 +1,10 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
 const crypto = require('crypto')
 const cookie = require('cookie')
+const schemas = require('./schemas')
+const { check, validationResult } = require('express-validator/check')
 
-const usersSchema = new Schema({
-  username: String,
-  name: String,
-  hash: String,
-  salt: String,
-  projects: [String]
-})
-
-const User = mongoose.model('User', usersSchema)
+// User schema from schemas module
+const User = schemas.User
 
 function generateSalt (){
   return crypto.randomBytes(16).toString('base64')
@@ -23,71 +16,80 @@ function generateHash (password, salt){
   return hash.digest('base64')
 }
 
-// TODO: Validate that all parameters are there (username, name, password), if not return error
+const breakIfInvalid = function(req, res, next) {
+  let errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() })
+  }
+  next()
+}
+
 // TODO: secure with all the things from lab7
 
 
 // curl -d '{"username":"Test Username", "password":"123", "name":"Test Name"}' -H "Content-Type: application/json" -X POST http://localhost:3000/api/auth/signup/
-exports.signup = function(req, res) {
-  
-  let username = req.body.username
-  let password = req.body.password
+exports.signup = [
+  check('username', 'Username must be alphanumeric').exists({checkNull: true, checkFalsy: true}).isAlphanumeric(),
+  check('password', 'password must be at least 5 characters long').exists().isLength({ min: 5 }),
+  check('name', 'Name required').isAlphanumeric(),
+  breakIfInvalid,
+  function(req, res) {
 
-  if (!username) return res.status(404).end('Username required')
-  if (!password) return res.status(404).end('Password required')
-  if (username === '') return res.status(404).end('Username cannot be empty')
-  if (password === '') return res.status(404).end('Password cannot be empty')
+    let username = req.body.username
+    let password = req.body.password
 
-  // Validate that username doesn't already exist, if yes return error
-  User.findOne( { 'username' : username }, function(err, user) { 
-    if (err) return res.status(500).end(err)
-    if (user) return res.status(409).end('username ' + username + ' already exists')
-
-    // Hash the password 
-    var salt = generateSalt()
-    var hash = generateHash(password, salt)
-    
-    let newUser = new User({
-      username: username,
-      name: req.body.name,
-      salt: salt,
-      hash: hash,
-      projects: []
-    })
-
-    // write the user to the db
-    newUser.save(function(err, user) {
+    // Validate that username doesn't already exist, if yes return error
+    User.findOne( { '_id' : username }, function(err, user) { 
       if (err) return res.status(500).end(err)
-      res.json(user)
-    })
+      if (user) return res.status(409).end('username ' + username + ' already exists')
 
-  })
-}
+      // Hash the password 
+      var salt = generateSalt()
+      var hash = generateHash(password, salt)
+      
+      let newUser = new User({
+        _id: username,
+        name: req.body.name,
+        salt: salt,
+        hash: hash,
+        projects: []
+      })
+
+      // write the user to the db
+      newUser.save(function(err, user) {
+        if (err) return res.status(500).end(err)
+        res.json(user)
+      })
+
+    })
+  }
+]
 
 
 
 // curl -c cookie.txt -d '{"username":"Test Username", "password":"123", "name":"Test Name"}' -H "Content-Type: application/json" -X POST http://localhost:3000/api/auth/signin/
-exports.signin = function(req, res) {
-  var username = req.body.username
-  var password = req.body.password
-  if (!username) return res.status(404).end('Username required')
-  if (!password) return res.status(404).end('Password required')
+exports.signin = [
+  check('username', 'Username must be alphanumeric').exists({checkNull: true, checkFalsy: true}).isAlphanumeric(),
+  breakIfInvalid,
+  function(req, res) {
+    var username = req.body.username
+    var password = req.body.password
 
-  User.findOne({'username': username}, function(err, user){
-    if (err) return res.status(500).end(err)
-    if (!user) return res.status(401).end('Access denied')
-    if (user.hash !== generateHash(password, user.salt)) return res.status(401).end('Access denied') // invalid password
-    // start a session
-    console.log('user ' + user.username + ' signed in')
-    req.session.username = user.username
-    res.setHeader('Set-Cookie', cookie.serialize('username', user.username, {
-      path : '/', 
-      maxAge: 60 * 60 * 24 * 7 // 1 week in number of seconds
-    }))
-    return res.json('user ' + user.username + ' signed in')
-  })
-}
-
+    User.findOne({_id: username}, function(err, user){
+      if (err) return res.status(500).end(err)
+      if (!user) return res.status(401).end('access denied')
+      if (user.hash !== generateHash(password, user.salt)) return res.status(401).end('access denied') // invalid password
+      // start a session
+      console.log('user ' + user._id + ' signed in')
+      req.session.username = user._id
+      res.setHeader('Set-Cookie', cookie.serialize('username', user._id, {
+        path : '/', 
+        maxAge: 60 * 60 * 24 * 7 // 1 week in number of seconds
+      }))
+      return res.json('user ' + user._id + ' signed in')
+    })
+  }
+]
 
 
 // curl -b cookie.txt -c cookie.txt localhost:3000/signout/
@@ -100,3 +102,7 @@ exports.signout = function (req, res) {
   res.redirect('/')
 }
 
+exports.isAuthenticated = function(req, res, next) {
+  if (!req.session.username) return res.status(401).end('access denied')
+  next()
+}
