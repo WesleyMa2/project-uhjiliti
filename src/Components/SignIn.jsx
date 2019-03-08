@@ -52,7 +52,7 @@ class SignIn extends Component {
     return (
       <Container fluid className="loginContainer verticalCenter">
         <Jumbotron className="loginForm">
-          <h2 className="center">Uhjility</h2>
+          <h2 className="center">Uhjiliti</h2>
           <div className="center">
             <TextField
               id="outlined-username-input"

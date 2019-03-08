@@ -1,13 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import App from './App.jsx'
+import Landing from './Landing'
 import * as serviceWorker from './serviceWorker'
 import { BrowserRouter } from 'react-router-dom'
 
 ReactDOM.render(
   <BrowserRouter>
-    <App />
+    <Landing />
   </BrowserRouter>,
   document.getElementById('root')
 )
