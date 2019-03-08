@@ -71,7 +71,6 @@ exports.createTicket = [
   sanitizeBody('title').trim().escape(),
   sanitizeBody('description').trim().escape(),
   function(req, res) {
-    
     let title = req.body.title
     let description = req.body.description
     let projectId = req.params.projectId
@@ -81,7 +80,10 @@ exports.createTicket = [
       if (err) return res.status(500).end(err)
       if (!project) return res.status(404).end('Project id' + projectId + ' does not exist')
 
-      // make a new ticke
+      // check if user is a member of the project
+      if(!isProjectAuthenticated(req.session.username, project)) return res.status(401).end('Access denied')
+      
+      // make a new ticket
       let newTicket = new Ticket({
         title: title,
         description: description,
@@ -104,3 +106,7 @@ exports.createTicket = [
     })
   }
 ]
+
+function isProjectAuthenticated(username, project){
+  return project.members.includes(username)
+}
