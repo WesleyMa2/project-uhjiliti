@@ -18,12 +18,14 @@ class SignUp extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      name: '',
       username: '',
       password: '',
       error: false,
       errorMessage: ''
     }
     
+    this.setName = this.setName.bind(this)
     this.setUsername = this.setUsername.bind(this)
     this.setPassword = this.setPassword.bind(this)
     this.register = this.register.bind(this)
@@ -33,19 +35,35 @@ class SignUp extends Component {
     const value = event.target.value
     this.setState({username: value})
   }
-      
+
+  setName(event) {
+    const value = event.target.value
+    this.setState({name: value})
+  }
+
   setPassword(event) {
     const value = event.target.value
     this.setState({password: value})
   }
     
   register() {
-    axios.post('/api/auth/signup', {username: this.state.username, password: this.state.password}).then(()=>{
+    axios.post('/api/auth/signup', {name: this.state.name, username: this.state.username, password: this.state.password}).then(()=>{
       window.location.href = window.location.origin + '/board'
     }).catch((err)=>{
-      this.setState({error: true, errorMessage: `Error: [${err.response.status}] ${err.response.data}`})
+      let data = err.response.data;
+      // if theres a validation error show the messages
+      if (err.response.status === 422) {
+        let list = '';
+        let sep = '';
+        data.errors.forEach( (err) => {
+          list += (sep + err.msg);
+          sep = ', ';
+        });
+        data = list
+      }
+      this.setState({error: true, errorMessage: `Error: [${err.response.status}] ${data}`})
     })
-    console.log(`Login button clicked! ${this.state.username}, ${this.state.password}`)
+    console.log(`Login button clicked! ${this.state.username}, ${this.state.name}, ${this.state.password}`)
   }
     
   render() {
@@ -53,6 +71,18 @@ class SignUp extends Component {
       <Container fluid className="loginContainer verticalCenter">
         <Jumbotron className="loginForm">
           <h2 className="center">Uhjiliti</h2>
+          <div className="center">
+            <TextField
+              id="outlined-name-input"
+              label="Full name"
+              type="name"
+              name="name"
+              autoComplete="full name"
+              margin="normal"
+              variant="outlined"
+              onChange = {this.setName}
+            />
+          </div>
           <div className="center">
             <TextField
               id="outlined-username-input"
