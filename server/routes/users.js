@@ -31,7 +31,7 @@ const breakIfInvalid = function(req, res, next) {
 exports.signup = [
   check('username', 'Username must be alphanumeric').exists({checkNull: true, checkFalsy: true}).isAlphanumeric(),
   check('password', 'password must be at least 5 characters long').exists().isLength({ min: 5 }),
-  check('name', 'Name required').isAlphanumeric(),
+  check('name', 'Name is required and must not contain special characters').exists({checkNull: true, checkFalsy: true}).matches(/^[a-z0-9 ]+$/i),
   breakIfInvalid,
   function(req, res) {
 
