@@ -64,6 +64,16 @@ curl -b cookie.txt -c cookie.txt http://localhost:4000/api/auth/signout/
 curl -d '{"name":"cool ass project", "description":"my first project"}' -H "Content-Type: application/json" -b cookie.txt -X POST http://localhost:4000/api/projects/
 ```
 
+- description: add a user to a project ny username
+    returns a 422 if invalid parameters
+    returns a 404 if project or user cannot be found
+    returns a 409 if user already exists
+- request: `POST /api/projects/PROJECTID/user`
+- TODO: finish
+```
+curl -d '{"username":"alice"}' -H "Content-Type: application/json" -b cookie.txt -X POST http://localhost:4000/api/projects/cool%20ass%20project/user
+```
+
 ### Tickets
 
 - description: adds a new ticket to the specified project

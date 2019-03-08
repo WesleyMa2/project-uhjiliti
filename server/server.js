@@ -45,5 +45,6 @@ app.get('/api/auth/signout/', users.signout)
 // PROJECTS
 app.post('/api/projects/', projects.createProject)
 app.post('/api/projects/:projectId/tickets/', projects.createTicket)
+app.post('/api/projects/:projectId/user/', projects.addUserToProject)
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
