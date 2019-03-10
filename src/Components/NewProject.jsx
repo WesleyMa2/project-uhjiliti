@@ -46,7 +46,18 @@ class NewProject extends Component {
       // FIGURE OUT WHAT TO DO ON POST
       window.location.href = window.location.origin + '/board'
     }).catch((err)=>{
-      this.setState({error: true, errorMessage: `Error: [${err.response.status}] ${err.response.data}`})
+      let data = err.response.data;
+      // if theres a validation error show the messages
+      if (err.response.status === 422) {
+        let list = '';
+        let sep = '';
+        data.errors.forEach( (err) => {
+          list += (sep + err.msg);
+          sep = ', ';
+        });
+        data = list
+      }
+      this.setState({error: true, errorMessage: `Error: [${err.response.status}] ${data}`})
     })
     console.log(`Create button clicked! ${this.state.name}, ${this.state.description}`)
   }
