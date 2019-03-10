@@ -46,15 +46,15 @@ class NewProject extends Component {
       // FIGURE OUT WHAT TO DO ON POST
       window.location.href = window.location.origin + '/board'
     }).catch((err)=>{
-      let data = err.response.data;
+      let data = err.response.data
       // if theres a validation error show the messages
       if (err.response.status === 422) {
-        let list = '';
-        let sep = '';
+        let list = ''
+        let sep = ''
         data.errors.forEach( (err) => {
-          list += (sep + err.msg);
-          sep = ', ';
-        });
+          list += (sep + err.msg)
+          sep = ', '
+        })
         data = list
       }
       this.setState({error: true, errorMessage: `Error: [${err.response.status}] ${data}`})
