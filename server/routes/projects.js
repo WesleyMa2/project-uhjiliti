@@ -42,7 +42,6 @@ exports.createProject = [
       let newProject = new Project({
         _id: name,
         description: description,
-        creator: req.session.username,
         members: [req.session.username],
         tickets: []
       })
@@ -52,7 +51,7 @@ exports.createProject = [
         if (err) return res.status(500).end(err)
 
         // add the project to the user's project list
-        User.findByIdAndUpdate(project.creator, { $addToSet: { projects: project._id }}, function(err) {
+        User.findByIdAndUpdate(req.session.username, { $addToSet: { projects: project._id }}, function(err) {
           if (err) return res.status(500).end(err)
           res.json(project)
         })
