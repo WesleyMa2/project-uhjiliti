@@ -25,7 +25,7 @@ const breakIfInvalid = function(req, res, next) {
 // curl -d '{"name":"cool ass project", "description":"my first project"}' -H "Content-Type: application/json" -b cookie.txt -X POST http://localhost:4000/api/projects/
 exports.createProject = [
   usersFunctions.isAuthenticated,
-  check('name', 'Project name must be alphanumeric').exists({checkNull: true, checkFalsy: true}),
+  check('name', 'Project name must be alphanumeric').exists({checkNull: true, checkFalsy: true}).matches(/^[a-z0-9 ]+$/i),
   breakIfInvalid,
   sanitizeBody('description').trim().escape(),
   sanitizeBody('name').trim().escape(),
