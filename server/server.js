@@ -41,6 +41,7 @@ app.use(function (req, res, next){
 app.post('/api/auth/signup/', users.signup)
 app.post('/api/auth/signin/', users.signin)
 app.get('/api/auth/signout/', users.signout)
+app.get('/api/user/projects', users.getProjects)
 
 // PROJECTS
 app.post('/api/projects/', projects.createProject)

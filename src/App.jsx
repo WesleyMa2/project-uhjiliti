@@ -1,18 +1,23 @@
 import React from 'react'
 import { Route, Link, Switch } from 'react-router-dom'
-import { withStyles } from '@material-ui/core/styles'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import AppBar from '@material-ui/core/AppBar'
 import Board from './Components/ProjectBoard'
-
+import Typography from '@material-ui/core/Typography'
+import ProjectMenu from './Components/ProjectMenu'
 
 function Chat() {
   return <h2>Chat</h2>
 }
 
-
-const styles = {}
+const styles = {
+  title: {
+    paddingTop: '10px',
+    paddingLeft: '2rem',
+    paddingRight: '2rem'
+  }
+}
 
 // Compontent holding main app
 class App extends React.Component {
@@ -20,40 +25,47 @@ class App extends React.Component {
     super(props)
 
     this.state = {
-      value: 0
+      selectedTab: 0
     }
     this.handleChange = this.handleChange.bind(this)
   }
 
   // Changes the highlighted tab
-  handleChange (event, value) {
-    this.setState({ value })
+  handleChange(event, value) {
+    this.setState({ selectedTab: value })
   }
-
   // Sets the correct highlighted tab on load
   componentDidMount() {
     let currPath = this.props.location.pathname
-    if (currPath === '/chat') this.setState({ value : 1 })
+    if (currPath === '/chat') this.setState({ selectedTab: 4 })
+    else this.setState({ selectedTab: 3 }) 
   }
 
   render() {
-    const { classes } = this.props
-    const { value } = this.state
+    const { selectedTab } = this.state
+    
     return (
-      <div className={classes.root}>
-        <AppBar position="static">
-          <Tabs centered value={value} onChange={this.handleChange}>
+      <div>
+        <AppBar position="fixed">
+          <Tabs value={selectedTab} onChange={this.handleChange} >
+            <Typography style={styles.title} variant="h5" color="inherit" noWrap>
+              Uhjiliti
+            </Typography>
+            <ProjectMenu />
+            <div style={{ grow: 1 }}></div>
             <Tab label="Board" component={Link} to="/board" />
             <Tab label="Chat" component={Link} to="/chat" />
           </Tabs>
         </AppBar>
-        <Switch>
-          <Route path="/board" component={Board} />
-          <Route path="/chat" exact component={Chat} />
-        </Switch>
+        <div id="app-container">
+          <Switch>
+            <Route path="/board" component={Board} />
+            <Route path="/chat" exact component={Chat} />
+          </Switch>
+        </div>
       </div>
     )
   }
 }
 
-export default withStyles(styles)(App)
+export default App

@@ -5,7 +5,7 @@ import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 
 
-const styles = {
+const addColBtnStyle = {
   margin: 0,
   top: 'auto',
   right: 20,
@@ -26,7 +26,7 @@ class ProjectBoard extends Component {
     return (
       <div>
         <Board className="board" data={data} editable draggable />
-        <Fab style={styles} color="primary" ara>
+        <Fab style={addColBtnStyle} color="primary">
           <AddIcon/>
         </Fab>
       </div>
