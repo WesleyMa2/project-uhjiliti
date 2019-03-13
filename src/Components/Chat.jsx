@@ -20,7 +20,7 @@ const style = {
   messageBoxStyle: {
     overflow: 'auto',
     height: '65vh',
-    width: '80vw'
+    width: '80vw',
   },
   listStyle: {
     display: 'flex',
@@ -28,7 +28,10 @@ const style = {
   }, 
   send: {
     display: 'flex',
-    alignItems: 'baseline'
+    alignItems: 'center',
+  },
+  sendButton: {
+    marginLeft: '20px'
   }
 }
 
@@ -101,6 +104,10 @@ class Chat extends Component {
             <ChatGroup chat={chat}/>
           )
           )}
+          <Button style={style.newChat}>
+            <i class="material-icons">group_add</i>
+            Create new Chat
+          </Button>
         </List>
         <div style={style.chatStyle}>
           <div style={style.messageBoxStyle}>
@@ -110,16 +117,30 @@ class Chat extends Component {
           </div> 
           <div style= {style.send}>
             <TextField
+              style={ {flexGrow: 1} }
               refs="messageBox"
               margin="normal"
               variant="outlined"
               onChange = {this.setMessage} 
             />
             <Button 
+              style={style.sendButton}
               variant="contained" 
               color="primary" 
               onClick={this.sendMessage}>
-               Send Message
+               Send Message <i class="material-icons">send</i> 
+            </Button>
+            <Button 
+              style={style.sendButton}
+              variant="contained" 
+              color="primary">
+              <i class="material-icons">call</i> 
+            </Button>
+            <Button 
+              style={style.sendButton}
+              variant="contained" 
+              color="primary">
+              <i class="material-icons">duo</i> 
             </Button>
           </div>
         </div>
