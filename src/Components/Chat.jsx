@@ -61,6 +61,7 @@ class Chat extends Component {
         }
         chat.lastMessage = lastMessage
       })
+      
       this.setState({chats: res.data, chatId: res.data[0]._id, messages: res.data[0].messages})
     })
   }
@@ -80,6 +81,11 @@ class Chat extends Component {
     })
   }
 
+  componentDidUpdate(prevProps){
+    if (this.props.currentProject !== prevProps.currentProject) {
+      this.getMessages()
+    }
+  }
 
   sendMessage() {
     if (!this.state.message) return

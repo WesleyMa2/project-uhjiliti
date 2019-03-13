@@ -7,6 +7,9 @@ import Board from './Components/ProjectBoard'
 import Chat from './Components/Chat'
 import Typography from '@material-ui/core/Typography'
 import ProjectMenu from './Components/ProjectMenu'
+import createBrowserHistory from 'history/createBrowserHistory'
+
+const history = createBrowserHistory()
 
 const styles = {
   title: {
@@ -32,7 +35,11 @@ class App extends React.Component {
   // Set the current project
   setCurrProject(value) {
     this.setState({currentProject: value})
-    console.log('The current project is ', value)
+    const url = history.location.pathname.split('/')
+    url[2] = value
+    const newUrl = url.join('/')
+    history.replace(newUrl)
+    this.forceUpdate()
   }
 
   // Changes the highlighted tab
@@ -41,16 +48,14 @@ class App extends React.Component {
   }
   // Sets the correct highlighted tab on load
   componentDidMount() {
-    let currPath = this.props.location.pathname
-    if (currPath === `/project/${this.state.currentProject}/chat`) this.setState({ selectedTab : 4 })
+    let currPath = window.location.pathname
+    if (currPath.split('/')[2] === '/chat') this.setState({ selectedTab : 4 })
     else this.setState({ selectedTab: 3 }) 
   }
 
   render() {
     const { selectedTab } = this.state
-    
     return (
-
       <div>
         <AppBar position="fixed">
           <Tabs value={selectedTab} onChange={this.handleChange} >
@@ -62,11 +67,12 @@ class App extends React.Component {
             <Tab label="Board" component={Link} to={`/project/${this.state.currentProject}/board`} />
             <Tab label="Chat" component={Link} to={`/project/${this.state.currentProject}/chat`} />
           </Tabs>
+          {this.state.currentProject}
         </AppBar>
         <div id="app-container">
           <Switch>
-            <Route path={`/project/${this.state.currentProject}/board`} component={Board} />
-            <Route path={`/project/${this.state.currentProject}/chat`} exact render={()=> <Chat currentProject={this.state.currentProject}/>} />
+            <Route path={'/project/*/board'} component={Board} />
+            <Route path={'/project/*/chat'} exact render={()=> <Chat currentProject={this.state.currentProject}/>} />
           </Switch>
         </div>
       </div>
