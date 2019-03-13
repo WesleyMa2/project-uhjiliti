@@ -24,6 +24,11 @@ const breakIfInvalid = function(req, res, next) {
   next()
 }
 
+exports.isAuthenticated = function(req, res, next) {
+  if (!req.session.username) return res.status(401).end('access denied')
+  next()
+}
+
 // TODO: secure with all the things from lab7
 
 
@@ -84,23 +89,37 @@ exports.signin = [
         path : '/', 
         maxAge: 60 * 60 * 24 * 7 // 1 week in number of seconds
       }))
-      return res.json('user ' + user._id + ' signed in')
+      res.setHeader('Set-Cookie', cookie.serialize('fullname', user.name, {
+        path : '/', 
+        maxAge: 60 * 60 * 24 * 7 // 1 week in number of seconds
+      }))
+      return res.json('user ' + username + ' has signed in')
     })
   }
 ]
 
 
-// curl -b cookie.txt -c cookie.txt localhost:4000/signout/
+// curl -b cookie.txt -c cookie.txt localhost:4000/auth/signout/
 exports.signout = function (req, res) {
   req.session.destroy()
   res.setHeader('Set-Cookie', cookie.serialize('username', '', {
     path : '/', 
     maxAge: 60 * 60 * 24 * 7 // 1 week in number of seconds
   }))
-  res.redirect('/')
+  return res.redirect('/')
 }
 
-exports.isAuthenticated = function(req, res, next) {
-  if (!req.session.username) return res.status(401).end('access denied')
-  next()
-}
+
+// Get the list of the current user's projects and *project Ids*
+// TODO: Make projects have UIDs
+// curl -b cookie.txt localhost:4000/api/user/projects
+exports.getProjects = [
+  exports.isAuthenticated,
+  function (req, res) {
+    const username = req.session.username
+    User.findById(username, {projects: 1, _id: 0}, function(err, projectList){
+      if (err) return res.status(500).end(err)
+      return res.json(projectList)
+    })
+  }
+]

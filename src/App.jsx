@@ -1,54 +1,77 @@
 import React from 'react'
 import { Route, Link, Switch } from 'react-router-dom'
-import { withStyles } from '@material-ui/core/styles'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import AppBar from '@material-ui/core/AppBar'
 import Board from './Components/ProjectBoard'
 import Chat from './Components/Chat'
+import Typography from '@material-ui/core/Typography'
+import ProjectMenu from './Components/ProjectMenu'
 
-const styles = {}
+const styles = {
+  title: {
+    paddingTop: '10px',
+    paddingLeft: '2rem',
+    paddingRight: '2rem'
+  }
+}
 
 // Compontent holding main app
 class App extends React.Component {
   constructor(props) {
     super(props)
-
     this.state = {
-      value: 0
+      currentProject: null,
+      selectedTab: 0
     }
     this.handleChange = this.handleChange.bind(this)
+    this.setCurrProject = this.setCurrProject.bind(this)
+
+  }
+
+  // Set the current project
+  setCurrProject(value) {
+    this.setState({currentProject: value})
+    console.log('The current project is ', value)
   }
 
   // Changes the highlighted tab
-  handleChange (event, value) {
-    this.setState({ value })
+  handleChange(event, value) {
+    this.setState({ selectedTab: value })
   }
-
   // Sets the correct highlighted tab on load
   componentDidMount() {
     let currPath = this.props.location.pathname
-    if (currPath === '/project/:projectId/chat') this.setState({ value : 1 })
+    if (currPath === `/project/${this.state.currentProject}/chat`) this.setState({ selectedTab : 4 })
+    else this.setState({ selectedTab: 3 }) 
   }
 
   render() {
-    const { classes } = this.props
-    const { value } = this.state
+    const { selectedTab } = this.state
+    
     return (
-      <div className={classes.root}>
-        <AppBar position="static">
-          <Tabs centered value={value} onChange={this.handleChange}>
-            <Tab label="Board" component={Link} to={`/project/${'ProjectId'}/board`} />
-            <Tab label="Chat" component={Link} to={`/project/${'ProjectId'}/chat`} />
+
+      <div>
+        <AppBar position="fixed">
+          <Tabs value={selectedTab} onChange={this.handleChange} >
+            <Typography style={styles.title} variant="h5" color="inherit" noWrap>
+              Uhjiliti
+            </Typography>
+            <ProjectMenu onSelect={this.setCurrProject}/>
+            <div style={{ grow: 1 }}></div>
+            <Tab label="Board" component={Link} to={`/project/${this.state.currentProject}/board`} />
+            <Tab label="Chat" component={Link} to={`/project/${this.state.currentProject}/chat`} />
           </Tabs>
         </AppBar>
-        <Switch>
-          <Route path="/project/:projectId/board" component={Board} />
-          <Route path="/project/:projectId/chat" exact component={Chat} />
-        </Switch>
+        <div id="app-container">
+          <Switch>
+            <Route path={`/project/${this.state.currentProject}/board`} component={Board} />
+            <Route path={`/project/${this.state.currentProject}/chat`} exact render={()=> <Chat currentProject={this.state.currentProject}/>} />
+          </Switch>
+        </div>
       </div>
     )
   }
 }
 
-export default withStyles(styles)(App)
+export default App

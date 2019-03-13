@@ -16,11 +16,11 @@ const style = {
     display: 'flex',
     flexDirection: 'column',
     padding: '20px',
+    flexGrow: 1
   },
   messageBoxStyle: {
     overflow: 'auto',
     height: '65vh',
-    width: '80vw',
   },
   listStyle: {
     display: 'flex',
@@ -53,7 +53,7 @@ class Chat extends Component {
   }
 
   getMessages() {
-    axios.get('/api/projects/ProjectAwesome/chats').then(res => {
+    axios.get(`/api/projects/${this.props.currentProject}/chats`).then(res => {
       res.data.forEach((chat)=>{
         let lastMessage = 'No messages yet'
         if (chat.messages[0]){

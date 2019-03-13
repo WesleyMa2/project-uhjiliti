@@ -5,7 +5,7 @@ import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 
 
-const styles = {
+const addColBtnStyle = {
   margin: 0,
   top: 'auto',
   right: 20,
@@ -17,8 +17,9 @@ const styles = {
 class ProjectBoard extends Component {
   constructor(props) {
     super(props)
-    this.state = { // We will use this to store the data that will be pulled from the db
-      lanes: []
+    this.state = {
+      projectName: null, 
+      boardDate: {} // We will use this to store the data that will be pulled from the db
     }
   }
 
@@ -26,7 +27,7 @@ class ProjectBoard extends Component {
     return (
       <div>
         <Board className="board" data={data} editable draggable />
-        <Fab style={styles} color="primary" ara>
+        <Fab style={addColBtnStyle} color="primary">
           <AddIcon/>
         </Fab>
       </div>

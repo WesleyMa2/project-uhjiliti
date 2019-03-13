@@ -1,13 +1,10 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
-import { withStyles } from '@material-ui/core/styles'
 import SignIn from './Components/SignIn'
 import SignUp from './Components/SignUp'
 import NewProject from './Components/NewProject'
 import './main.css'
 import App from './App'
-
-const styles = {}
 
 class Landing extends React.Component {
   render() {
@@ -25,4 +22,4 @@ class Landing extends React.Component {
   }
 }
 
-export default withStyles(styles)(Landing)
+export default (Landing)
