@@ -30,3 +30,23 @@ const ticketSchema = new Schema({
 })
 
 exports.Ticket = mongoose.model('Ticket', ticketSchema)
+
+const messageSchema = new Schema({
+  date: Date,
+  content: String,
+  author: { type: String, ref: 'User' }
+})
+
+exports.Message = mongoose.model('Message', messageSchema)
+
+const chatSchema = new Schema({
+  name: String,
+  members: [{ type: String, ref: 'User' }],
+  projectId: { type: String, ref: 'Project'},
+  messages: [messageSchema]
+})
+
+exports.Chat = mongoose.model('Chat', chatSchema)
+
+
+

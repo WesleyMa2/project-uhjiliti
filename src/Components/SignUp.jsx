@@ -48,17 +48,17 @@ class SignUp extends Component {
     
   register() {
     axios.post('/api/auth/signup', {name: this.state.name, username: this.state.username, password: this.state.password}).then(()=>{
-      window.location.href = window.location.origin + '/board'
+      window.location.href = window.location.origin + '/project/:projectId/board'
     }).catch((err)=>{
-      let data = err.response.data;
+      let data = err.response.data
       // if theres a validation error show the messages
       if (err.response.status === 422) {
-        let list = '';
-        let sep = '';
+        let list = ''
+        let sep = ''
         data.errors.forEach( (err) => {
-          list += (sep + err.msg);
-          sep = ', ';
-        });
+          list += (sep + err.msg)
+          sep = ', '
+        })
         data = list
       }
       this.setState({error: true, errorMessage: `Error: [${err.response.status}] ${data}`})
