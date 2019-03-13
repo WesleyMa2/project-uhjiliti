@@ -17,8 +17,9 @@ const addColBtnStyle = {
 class ProjectBoard extends Component {
   constructor(props) {
     super(props)
-    this.state = { // We will use this to store the data that will be pulled from the db
-      lanes: []
+    this.state = {
+      projectName: null, 
+      boardDate: {} // We will use this to store the data that will be pulled from the db
     }
   }
 

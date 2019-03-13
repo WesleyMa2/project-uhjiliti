@@ -23,11 +23,18 @@ const styles = {
 class App extends React.Component {
   constructor(props) {
     super(props)
-
     this.state = {
+      currentProject: null,
       selectedTab: 0
     }
     this.handleChange = this.handleChange.bind(this)
+    this.setCurrProject = this.setCurrProject.bind(this)
+  }
+
+  // Set the current project
+  setCurrProject = (value) => {
+    this.setState({currentProject: value})
+    console.log('The current project is ', value)
   }
 
   // Changes the highlighted tab
@@ -51,7 +58,7 @@ class App extends React.Component {
             <Typography style={styles.title} variant="h5" color="inherit" noWrap>
               Uhjiliti
             </Typography>
-            <ProjectMenu />
+            <ProjectMenu onSelect={this.setCurrProject}/>
             <div style={{ grow: 1 }}></div>
             <Tab label="Board" component={Link} to="/board" />
             <Tab label="Chat" component={Link} to="/chat" />

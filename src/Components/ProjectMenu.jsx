@@ -27,6 +27,7 @@ class ProjectMenu extends React.Component {
         this.setState({projects: res.data.projects})
       })
       .catch(err => {
+        // TODO: User <SnackBar/> to show error
         console.error(err)
       })
   }
@@ -37,7 +38,7 @@ class ProjectMenu extends React.Component {
 
   handleMenuItemClick = (event, index) => {
     this.setState({ selectedIndex: index, anchorEl: null })
-    console.log(this.state.projects[this.state.selectedIndex], 'has been selected.')
+    this.props.onSelect(this.state.projects[index]);
   }
 
   handleClose = () => {
