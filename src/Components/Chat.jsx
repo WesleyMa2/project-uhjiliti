@@ -61,8 +61,11 @@ class Chat extends Component {
         }
         chat.lastMessage = lastMessage
       })
-      
-      this.setState({chats: res.data, chatId: res.data[0]._id, messages: res.data[0].messages})
+      if (res.data[0]) {
+        this.setState({chats: res.data, chatId: res.data[0]._id, messages: res.data[0].messages})
+      } else {
+        this.setState({chats: [], chatId: undefined, messages: []})
+      }
     })
   }
 
@@ -111,7 +114,7 @@ class Chat extends Component {
           )
           )}
           <Button style={style.newChat}>
-            <i class="material-icons">group_add</i>
+            <i className="material-icons">group_add</i>
             Create new Chat
           </Button>
         </List>
@@ -134,19 +137,19 @@ class Chat extends Component {
               variant="contained" 
               color="primary" 
               onClick={this.sendMessage}>
-               Send Message <i class="material-icons">send</i> 
+               Send Message <i className="material-icons">send</i> 
             </Button>
             <Button 
               style={style.sendButton}
               variant="contained" 
               color="primary">
-              <i class="material-icons">call</i> 
+              <i className="material-icons">call</i> 
             </Button>
             <Button 
               style={style.sendButton}
               variant="contained" 
               color="primary">
-              <i class="material-icons">duo</i> 
+              <i className="material-icons">duo</i> 
             </Button>
           </div>
         </div>
@@ -166,6 +169,7 @@ function Message (props) {
 
 function ChatGroup (props) {
   const chat = props.chat
+  console.log(chat)
   return <ListItem button 
     key={chat._id}
     onClick={ ()=> this.setState({chatId: chat._id})} >

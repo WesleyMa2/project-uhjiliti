@@ -24,31 +24,32 @@ class ProjectBoard extends Component {
         lanes: []
       }
     }
-    this.setColumns = this.setColumns.bind(this)
+    this.getColumns = this.getColumns.bind(this)
 
   }
 
-  setColumns(cols){    
-    let lanes = cols.map(el => {
-      return {
-        id: el.replace(' ', '-'),
-        title: el,
-        label: '',
-        style: {width: 280},
-        cards: []
-      }
-    }) 
-    this.setState({boardData: {lanes:lanes }})
-    return this.state.boardData
-    
+  componentDidMount(){
+    if (this.props.projectId) this.getColumns()
   }
-  componentDidUpdate(prevProps) {
-    if (this.props.projectId === prevProps.projectId) return
+
+  getColumns(){
     axios.get('api/projects/' + this.props.projectId + '/columns')
-      .then((res) => {
-        return this.setColumns(res.data)
+      .then(res => {
+        let lanes = res.data.map(el => {
+          return {
+            id: el.replace(' ', '-'),
+            title: el,
+            label: '',
+            style: {width: 280},
+            cards: []
+          }
+        }) 
+        this.setState({boardData: {lanes:lanes }})
       })
       .catch(err => console.error(err))
+  }
+  componentDidUpdate(prevProps) {
+    if (this.props.projectId !== prevProps.projectId) this.getColumns()
   }
 
   render() {
