@@ -13,7 +13,6 @@ exports.User = mongoose.model('User', usersSchema)
 
 const projectsSchema = new Schema({
   _id: String,
-  owner: { type: String, ref: 'User' },
   members: [{ type: String, ref: 'User' }],
   description: String,
   tickets: [{ type: Schema.Types.ObjectId, ref: 'Ticket'}]

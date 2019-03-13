@@ -25,7 +25,7 @@ const breakIfInvalid = function(req, res, next) {
 // curl -d '{"name":"cool ass project", "description":"my first project"}' -H "Content-Type: application/json" -b cookie.txt -X POST http://localhost:4000/api/projects/
 exports.createProject = [
   usersFunctions.isAuthenticated,
-  check('name', 'Project name must be alphanumeric').exists({checkNull: true, checkFalsy: true}),
+  check('name', 'Project name must be alphanumeric').exists({checkNull: true, checkFalsy: true}).matches(/^[a-z0-9 ]+$/i),
   breakIfInvalid,
   sanitizeBody('description').trim().escape(),
   sanitizeBody('name').trim().escape(),
@@ -42,7 +42,6 @@ exports.createProject = [
       let newProject = new Project({
         _id: name,
         description: description,
-        creator: req.session.username,
         members: [req.session.username],
         tickets: []
       })
@@ -52,7 +51,7 @@ exports.createProject = [
         if (err) return res.status(500).end(err)
 
         // add the project to the user's project list
-        User.findByIdAndUpdate(project.creator, { $addToSet: { projects: project._id }}, function(err) {
+        User.findByIdAndUpdate(req.session.username, { $addToSet: { projects: project._id }}, function(err) {
           if (err) return res.status(500).end(err)
           res.json(project)
         })

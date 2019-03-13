@@ -1,6 +1,6 @@
 .loginContainer {
     height: 100vh;
-    width: 100wh;
+    width: 100vw;
     background-image: url('../resources/business.jpg');
     background-size: cover;
 }
@@ -9,6 +9,11 @@
     padding: 50px;
     margin: auto;
     width: 400px;
+}
+
+.createProjectForm {
+    padding: 50px;
+    margin:auto;
 }
 
 .center {
