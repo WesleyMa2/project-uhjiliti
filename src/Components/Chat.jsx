@@ -61,8 +61,11 @@ class Chat extends Component {
         }
         chat.lastMessage = lastMessage
       })
-      
-      this.setState({chats: res.data, chatId: res.data[0]._id, messages: res.data[0].messages})
+      if (res.data[0]) {
+        this.setState({chats: res.data, chatId: res.data[0]._id, messages: res.data[0].messages})
+      } else {
+        this.setState({chats: [], chatId: undefined, messages: []})
+      }
     })
   }
 
@@ -166,6 +169,7 @@ function Message (props) {
 
 function ChatGroup (props) {
   const chat = props.chat
+  console.log(chat)
   return <ListItem button 
     key={chat._id}
     onClick={ ()=> this.setState({chatId: chat._id})} >
