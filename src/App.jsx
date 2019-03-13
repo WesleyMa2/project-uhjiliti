@@ -4,12 +4,12 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import AppBar from '@material-ui/core/AppBar'
 import Board from './Components/ProjectBoard'
+import Chat from './Components/Chat'
 import Typography from '@material-ui/core/Typography'
 import ProjectMenu from './Components/ProjectMenu'
+import createBrowserHistory from 'history/createBrowserHistory'
 
-function Chat() {
-  return <h2>Chat</h2>
-}
+const history = createBrowserHistory()
 
 const styles = {
   title: {
@@ -29,12 +29,17 @@ class App extends React.Component {
     }
     this.handleChange = this.handleChange.bind(this)
     this.setCurrProject = this.setCurrProject.bind(this)
+
   }
 
   // Set the current project
   setCurrProject(value) {
     this.setState({currentProject: value})
-    console.log('The current project is ', value)
+    const url = history.location.pathname.split('/')
+    url[2] = value
+    const newUrl = url.join('/')
+    history.replace(newUrl)
+    this.forceUpdate()
   }
 
   // Changes the highlighted tab
@@ -43,14 +48,13 @@ class App extends React.Component {
   }
   // Sets the correct highlighted tab on load
   componentDidMount() {
-    let currPath = this.props.location.pathname
-    if (currPath === '/chat') this.setState({ selectedTab: 4 })
+    let currPath = window.location.pathname
+    if (currPath.split('/')[2] === '/chat') this.setState({ selectedTab : 4 })
     else this.setState({ selectedTab: 3 }) 
   }
 
   render() {
     const { selectedTab } = this.state
-    
     return (
       <div>
         <AppBar position="fixed">
@@ -60,18 +64,14 @@ class App extends React.Component {
             </Typography>
             <ProjectMenu onSelect={this.setCurrProject}/>
             <div style={{ grow: 1 }}></div>
-            <Tab label="Board" component={Link} to="/board" />
-            <Tab label="Chat" component={Link} to="/chat" />
+            <Tab label="Board" component={Link} to={`/project/${this.state.currentProject}/board`} />
+            <Tab label="Chat" component={Link} to={`/project/${this.state.currentProject}/chat`} />
           </Tabs>
         </AppBar>
         <div id="app-container">
           <Switch>
-            <Route path="/board"
-              render={(routeProps) => (
-                <Board projectId={this.state.currentProject}  />
-              )}
-            />
-            <Route path="/chat" exact component={Chat} />
+            <Route path={'/project/*/board'} render={() => <Board projectId={this.state.currentProject}/>} />
+            <Route path={'/project/*/chat'} exact render={()=> <Chat currentProject={this.state.currentProject}/>} />
           </Switch>
         </div>
       </div>

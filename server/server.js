@@ -6,6 +6,9 @@ const cookie = require('cookie')
 const session = require('express-session')
 const users = require('./routes/users')
 const projects = require('./routes/projects')
+const chats = require('./routes/chats')
+const http = require('http').Server(app)
+const socketio = require('./socket')
 require('./database')
 
 app.use(bodyParser.json())
@@ -37,6 +40,8 @@ app.use(function (req, res, next){
   next()
 })
 
+socketio.bindServer(http)
+
 // USERS
 app.post('/api/auth/signup/', users.signup)
 app.post('/api/auth/signin/', users.signin)
@@ -49,4 +54,8 @@ app.post('/api/projects/:projectId/tickets/', projects.createTicket)
 app.post('/api/projects/:projectId/user/', projects.addUserToProject)
 app.get('/api/projects/:projectId/columns/', projects.getColumns)
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+// CHATS
+app.post('/api/projects/:projectId/chats/', chats.createChat)
+app.get('/api/projects/:projectId/chats/', chats.getMessages)
+
+http.listen(port, () => console.log(`Example app listening on port ${port}!`))

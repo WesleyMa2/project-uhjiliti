@@ -38,15 +38,6 @@ class ProjectBoard extends Component {
         cards: []
       }
     }) 
-    let test = {
-      id: 'PLANNED',
-      title: 'Planned Tasks',
-      label: '20/70',
-      style: {
-        width: 280
-      },
-      cards: []
-    }
     this.setState({boardData: {lanes:lanes }})
     return this.state.boardData
     

@@ -70,8 +70,6 @@ exports.signup = [
   }
 ]
 
-
-
 // curl -c cookie.txt -d '{"username":"Test Username", "password":"123", "name":"Test Name"}' -H "Content-Type: application/json" -X POST http://localhost:4000/api/auth/signin/
 exports.signin = [
   check('username', 'Username must be alphanumeric').exists({checkNull: true, checkFalsy: true}).isAlphanumeric(),
