@@ -24,7 +24,10 @@ class ProjectMenu extends React.Component {
   componentDidMount() {
     axios.get('api/user/projects')
       .then( res => {
-        this.setState({projects: res.data.projects})
+        if (res.data.projects.length > 0) {
+          this.setState({projects: res.data.projects})
+          this.props.onSelect(this.state.projects[0]);
+        }
       })
       .catch(err => {
         // TODO: User <SnackBar/> to show error

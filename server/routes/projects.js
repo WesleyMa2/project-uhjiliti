@@ -1,6 +1,6 @@
 const usersFunctions = require('./users')
 const schemas = require('./schemas')
-const { check, validationResult } = require('express-validator/check')
+const { check, validationResult, param } = require('express-validator/check')
 const { sanitizeBody } = require('express-validator/filter')
 
 // Project schema from schemas.js
@@ -21,6 +21,7 @@ const breakIfInvalid = function(req, res, next) {
   }
   next()
 }
+// CREATE
 
 // curl -d '{"name":"cool ass project", "description":"my first project"}' -H "Content-Type: application/json" -b cookie.txt -X POST http://localhost:4000/api/projects/
 exports.createProject = [
@@ -42,6 +43,7 @@ exports.createProject = [
       let newProject = new Project({
         _id: name,
         description: description,
+        columns: ['Todo', 'In Progress', 'Done'],
         members: [req.session.username],
         tickets: []
       })
@@ -142,6 +144,28 @@ exports.createTicket = [
     })
   }
 ]
+
+// READ
+
+// TODO: Get all columns of the given projectId
+// /api/projects/:projectId/columns
+exports.getColumns = [
+  usersFunctions.isAuthenticated,
+  param('projectId', 'projectId must not be empty').exists(),
+  breakIfInvalid,
+  function (req, res) {
+    Project.findById(req.params.projectId, function(err, project){
+      let projectId = req.params.projectId
+      if (err) return res.status(500).end(err)
+      if (!project) return res.status(404).end('Project id' + projectId + ' does not exist')
+      return res.json(project.columns)
+    })
+  }
+]
+
+// TODO: Get the tickets of the giben projectId's columnId
+
+
 
 function isProjectAuthenticated(username, project){
   return project.members.includes(username)

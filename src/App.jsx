@@ -19,7 +19,7 @@ const styles = {
   }
 }
 
-// Compontent holding main app
+// Component holding main app
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -32,7 +32,7 @@ class App extends React.Component {
   }
 
   // Set the current project
-  setCurrProject = (value) => {
+  setCurrProject(value) {
     this.setState({currentProject: value})
     console.log('The current project is ', value)
   }
@@ -66,7 +66,11 @@ class App extends React.Component {
         </AppBar>
         <div id="app-container">
           <Switch>
-            <Route path="/board" component={Board} />
+            <Route path="/board"
+              render={(routeProps) => (
+                <Board projectId={this.state.currentProject}  />
+              )}
+            />
             <Route path="/chat" exact component={Chat} />
           </Switch>
         </div>

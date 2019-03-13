@@ -15,6 +15,7 @@ const projectsSchema = new Schema({
   _id: String,
   members: [{ type: String, ref: 'User' }],
   description: String,
+  columns:[{type: String}],
   tickets: [{ type: Schema.Types.ObjectId, ref: 'Ticket'}]
 })
 
@@ -23,6 +24,7 @@ exports.Project = mongoose.model('Project', projectsSchema)
 const ticketSchema = new Schema({
   title: String,
   project: {type: String, ref: 'Project'},
+  column: {type: String},
   description: String,
   assignee: { type: String, ref: 'User' },
   watchers: [{ type: String, ref: 'User' }]

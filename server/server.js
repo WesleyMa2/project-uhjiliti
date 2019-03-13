@@ -47,5 +47,6 @@ app.get('/api/user/projects', users.getProjects)
 app.post('/api/projects/', projects.createProject)
 app.post('/api/projects/:projectId/tickets/', projects.createTicket)
 app.post('/api/projects/:projectId/user/', projects.addUserToProject)
+app.get('/api/projects/:projectId/columns/', projects.getColumns)
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
