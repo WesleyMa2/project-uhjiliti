@@ -19,7 +19,7 @@ const styles = {
   }
 }
 
-// Compontent holding main app
+// Component holding main app
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -67,11 +67,10 @@ class App extends React.Component {
             <Tab label="Board" component={Link} to={`/project/${this.state.currentProject}/board`} />
             <Tab label="Chat" component={Link} to={`/project/${this.state.currentProject}/chat`} />
           </Tabs>
-          {this.state.currentProject}
         </AppBar>
         <div id="app-container">
           <Switch>
-            <Route path={'/project/*/board'} component={Board} />
+            <Route path={'/project/*/board'} render={() => <Board projectId={this.state.currentProject}/>} />
             <Route path={'/project/*/chat'} exact render={()=> <Chat currentProject={this.state.currentProject}/>} />
           </Switch>
         </div>

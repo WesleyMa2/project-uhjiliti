@@ -80,22 +80,6 @@
           "description": "Use Spreadsheet for now"
         }
       ]
-    },
-    {
-      "id": "REPEAT",
-      "title": "Repeat",
-      "style": {
-        "width": 280
-      },
-      "label": "1/1",
-      "cards": [
-        {
-          "id": "Repeat1",
-          "title": "Morning Jog",
-          "label": "30 mins",
-          "description": "Track using fitbit"
-        }
-      ]
     }
   ]
 }
