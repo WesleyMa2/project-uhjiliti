@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 *{
     font-family: 'Roboto', sans-serif;
+    scroll-behavior: smooth;
 }
-
 .board {
     /* background: linear-gradient(to right, #232526, #414345); */
     background: linear-gradient(to bottom, #c9d6ff, #e2e2e2);

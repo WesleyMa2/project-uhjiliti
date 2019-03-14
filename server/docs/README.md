@@ -18,9 +18,9 @@
     - body: access denied
 - response: 404
     - content-type: `application/json`
-```
-curl -d '{"username":"Test Username", "password":"123"}' -H "Content-Type: application/json" -X POST http://localhost:4000/api/auth/signin/
-```
+    ```
+    curl -d '{"username":"Test Username", "password":"123"}' -H "Content-Type: application/json" -X POST http://localhost:4000/api/auth/signin/
+    ```
 
 
 - description: signup with credentials
@@ -39,9 +39,9 @@ curl -d '{"username":"Test Username", "password":"123"}' -H "Content-Type: appli
     - body: username already exists
 - response: 404
     - content-type: `application/json`
-```
-curl -d '{"username":"Test Username", "password":"123", "name":"Test Name"}' -H "Content-Type: application/json" -X POST http://localhost:4000/api/auth/signup/
-```
+    ```
+    curl -d '{"username":"Test Username", "password":"123", "name":"Test Name"}' -H "Content-Type: application/json" -X POST http://localhost:4000/api/auth/signup/
+    ```
 
 - description: signout
     resets requestor's cookie
@@ -49,9 +49,9 @@ curl -d '{"username":"Test Username", "password":"123", "name":"Test Name"}' -H 
 - response: 200
     - content-type: `application/json`
     - body: user signed out
-```
-curl -b cookie.txt -c cookie.txt http://localhost:4000/api/auth/signout/
-```
+    ```
+    curl -b cookie.txt -c cookie.txt http://localhost:4000/api/auth/signout/
+    ```
 
 ### Projects
 
@@ -60,9 +60,9 @@ curl -b cookie.txt -c cookie.txt http://localhost:4000/api/auth/signout/
     returns a 401 if you don't have permission
 - request: `POST /api/projects`
 - TODO: finish
-```
-curl -d '{"name":"cool ass project", "description":"my first project"}' -H "Content-Type: application/json" -b cookie.txt -X POST http://localhost:4000/api/projects/
-```
+    ```
+    curl -d '{"name":"cool ass project", "description":"my first project"}' -H "Content-Type: application/json" -b cookie.txt -X POST http://localhost:4000/api/projects/
+    ```
 
 - description: add a user to a project by username
     returns a 422 if invalid parameters
@@ -70,9 +70,9 @@ curl -d '{"name":"cool ass project", "description":"my first project"}' -H "Cont
     returns a 409 if user already exists
 - request: `POST /api/projects/PROJECTID/user`
 - TODO: finish
-```
-curl -d '{"username":"alice"}' -H "Content-Type: application/json" -b cookie.txt -X POST http://localhost:4000/api/projects/cool%20ass%20project/user
-```
+    ```
+    curl -d '{"username":"alice"}' -H "Content-Type: application/json" -b cookie.txt -X POST http://localhost:4000/api/projects/cool%20ass%20project/user
+    ```
 
 ### Tickets
 

@@ -145,11 +145,28 @@ exports.createTicket = [
   }
 ]
 
+// /api/projects/:projectId/columns
+exports.createColumn = [
+  usersFunctions.isAuthenticated,
+  check('columnName', 'columnName must not be empty').exists(),
+  param('projectId', 'projectId must not be empty').exists(),
+  breakIfInvalid,
+  function(req, res) {
+    let projectId = req.params.projectId
+    let columnName = req.body.columnName
+    Project.findOneAndUpdate({_id: projectId},{$addToSet: {columns: columnName}}, {new: true}, function(err, project){
+      if (err) return res.status(500).end(err)
+      if (!project) return res.status(404).end('Project id' + projectId + ' does not exist')
+      return res.json(project)
+    })
+  }
+]
+
 // READ
 
-// TODO: Get all columns of the given projectId
-// /api/projects/:projectId/columns
-exports.getColumns = [
+// TODO: Get the metadata of the given projecct
+// /api/projects/:projectId/
+exports.getProject = [
   usersFunctions.isAuthenticated,
   param('projectId', 'projectId must not be empty').exists(),
   breakIfInvalid,
@@ -158,7 +175,7 @@ exports.getColumns = [
       let projectId = req.params.projectId
       if (err) return res.status(500).end(err)
       if (!project) return res.status(404).end('Project id' + projectId + ' does not exist')
-      return res.json(project.columns)
+      return res.json(project)
     })
   }
 ]

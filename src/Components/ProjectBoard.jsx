@@ -1,19 +1,17 @@
 import React, { Component } from 'react'
 import AsyncBoard from 'react-trello'
-import data from '../resources/test_data.json'
-import Fab from '@material-ui/core/Fab'
-import AddIcon from '@material-ui/icons/Add'
 import axios from '../axios'
+import AddColForm from './AddColForm'
 
-
-const addColBtnStyle = {
-  margin: 0,
-  top: 'auto',
-  right: 20,
-  bottom: 20,
-  left: 'auto',
-  position: 'fixed',
-}
+var Column = (function() {
+  return function item(name) {
+    this.id = name.replace(' ', '-')
+    this.title = name
+    this.label = ''
+    this.style = {width: 280}
+    this.cards = []
+  }
+})()
 
 class ProjectBoard extends Component {
   constructor(props) {
@@ -24,41 +22,43 @@ class ProjectBoard extends Component {
         lanes: []
       }
     }
+    this.addColumn = this.addColumn.bind(this)
     this.getColumns = this.getColumns.bind(this)
 
   }
-
   componentDidMount(){
     if (this.props.projectId) this.getColumns()
-  }
-
-  getColumns(){
-    axios.get('api/projects/' + this.props.projectId + '/columns')
-      .then(res => {
-        let lanes = res.data.map(el => {
-          return {
-            id: el.replace(' ', '-'),
-            title: el,
-            label: '',
-            style: {width: 280},
-            cards: []
-          }
-        }) 
-        this.setState({boardData: {lanes:lanes }})
-      })
-      .catch(err => console.error(err))
   }
   componentDidUpdate(prevProps) {
     if (this.props.projectId !== prevProps.projectId) this.getColumns()
   }
 
+  addColumn(colName) {
+    console.log(colName)
+    axios.post('api/projects/' + this.props.projectId + '/columns/', {columnName: colName})
+      .then(res => {
+        let newLanes = this.state.boardData.lanes
+        newLanes.push(new Column(colName))
+        this.setState({boardData: {lanes: newLanes}})
+      }).catch(err => console.error(err))
+  }
+  getColumns(){
+    axios.get('api/projects/' + this.props.projectId + '/')
+      .then(res => {
+        let lanes = res.data.columns.map(el => {
+          return new Column(el)
+        }) 
+        this.setState({boardData: {lanes:lanes }})
+      })
+      .catch(err => console.error(err))
+  }
+  
+
   render() {
     return (
       <div>
         <AsyncBoard className="board" data={this.state.boardData} editable draggable />
-        <Fab style={addColBtnStyle} color="primary">
-          <AddIcon/>
-        </Fab>
+        <AddColForm onAdd={this.addColumn}/>
       </div>
     )
   }
