@@ -13,6 +13,7 @@ var Column = (function() {
   }
 })()
 
+// Component to display the current user's selected project board
 class ProjectBoard extends Component {
   constructor(props) {
     super(props)
@@ -37,9 +38,11 @@ class ProjectBoard extends Component {
     console.log(colName)
     axios.post('api/projects/' + this.props.projectId + '/columns/', {columnName: colName})
       .then(res => {
-        let newLanes = this.state.boardData.lanes
+        let newLanes = this.state.boardData.lanes.slice()
         newLanes.push(new Column(colName))
         this.setState({boardData: {lanes: newLanes}})
+        const board = document.getElementsByClassName('board')[0]
+        board.scrollLeft = 30000
       }).catch(err => console.error(err))
   }
   getColumns(){
@@ -57,7 +60,7 @@ class ProjectBoard extends Component {
   render() {
     return (
       <div>
-        <AsyncBoard className="board" data={this.state.boardData} editable draggable />
+        <AsyncBoard className="board" data={this.state.boardData} editable draggable/>
         <AddColForm onAdd={this.addColumn}/>
       </div>
     )

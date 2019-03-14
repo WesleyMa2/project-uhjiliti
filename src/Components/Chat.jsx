@@ -2,30 +2,25 @@ import React, { Component } from 'react'
 import io from 'socket.io-client'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
 import axios from '../axios'
+import ChatList from './ChatList'
 
 const style = {
   main: {
     display: 'flex',
-    padding: '30px'
+    padding: '30px',
   }, 
   chatStyle: {
     display: 'flex',
     flexDirection: 'column',
     padding: '20px',
-    flexGrow: 1
+    flexGrow: 1,
+    borderLeft: '1px solid #c4c4c4'
   },
   messageBoxStyle: {
     overflow: 'auto',
-    height: '65vh',
+    height: '70vh',
   },
-  listStyle: {
-    display: 'flex',
-    flexDirection: 'column'
-  }, 
   send: {
     display: 'flex',
     alignItems: 'center',
@@ -41,7 +36,10 @@ class Chat extends Component {
 
     this.sendMessage = this.sendMessage.bind(this)
     this.setMessage = this.setMessage.bind(this)
+    this.handleKeyPress = this.handleKeyPress.bind(this)
     this.getMessages = this.getMessages.bind(this)
+    this.selectChat = this.selectChat.bind(this)
+    this.scrollToBottom = this.scrollToBottom.bind(this)
 
     this.state = {
       chats: [],
@@ -84,9 +82,18 @@ class Chat extends Component {
     })
   }
 
-  componentDidUpdate(prevProps){
+  componentDidUpdate(prevProps, prevState){
     if (this.props.currentProject !== prevProps.currentProject) {
       this.getMessages()
+    } 
+    if (this.state.chatId !== prevState.chatId) {
+      this.scrollToBottom()
+    }
+    // Scroll chatbox if its close to bottom 
+    const messageBox = this.refs['messageBox']
+    const currentHeight = messageBox.scrollHeight - messageBox.clientHeight
+    if (messageBox.scrollTop >= currentHeight - 30) {
+      messageBox.scrollTop = currentHeight + 30
     }
   }
 
@@ -105,21 +112,27 @@ class Chat extends Component {
     this.setState({message: value})
   }
 
+  handleKeyPress(event) {
+    if (event.key === 'Enter'){
+      this.sendMessage()
+    }
+  }
+
+  scrollToBottom () {
+    const messageBox = this.refs['messageBox']
+    messageBox.scrollTop = messageBox.scrollHeight
+  }
+
+  selectChat(chat) {
+    this.setState({messages: chat.messages, chatId: chat._id})
+  }
+
   render() {
     return ( 
       <div style={style.main}>
-        <List style = {style.listStyle}>
-          {this.state.chats.map((chat) => (
-            <ChatGroup chat={chat}/>
-          )
-          )}
-          <Button style={style.newChat}>
-            <i className="material-icons">group_add</i>
-            Create new Chat
-          </Button>
-        </List>
+        <ChatList chats={this.state.chats} handleSelect={(chat)=>this.selectChat(chat)}/>
         <div style={style.chatStyle}>
-          <div style={style.messageBoxStyle}>
+          <div style={style.messageBoxStyle} ref="messageBox">
             {this.state.messages.map((message) => (
               <Message key={message._id} author={message.author} content={message.content}/>
             ))}
@@ -131,6 +144,7 @@ class Chat extends Component {
               margin="normal"
               variant="outlined"
               onChange = {this.setMessage} 
+              onKeyPress = {this.handleKeyPress}
             />
             <Button 
               style={style.sendButton}
@@ -167,14 +181,6 @@ function Message (props) {
   </div>
 }
 
-function ChatGroup (props) {
-  const chat = props.chat
-  console.log(chat)
-  return <ListItem button 
-    key={chat._id}
-    onClick={ ()=> this.setState({chatId: chat._id})} >
-    <ListItemText primary={chat.name} secondary={chat.lastMessage}/>
-  </ListItem>
-}
+
 
 export default Chat

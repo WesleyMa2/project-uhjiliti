@@ -68,7 +68,7 @@ class App extends React.Component {
             <Tab label="Chat" component={Link} to={`/project/${this.state.currentProject}/chat`} />
           </Tabs>
         </AppBar>
-        <div id="app-container">
+        <div id="app-container" ref="board">
           <Switch>
             <Route path={'/project/*/board'} render={() => <Board projectId={this.state.currentProject}/>} />
             <Route path={'/project/*/chat'} exact render={()=> <Chat currentProject={this.state.currentProject}/>} />
