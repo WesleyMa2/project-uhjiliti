@@ -7,8 +7,11 @@ import Button from '@material-ui/core/Button'
 const style ={
   listStyle: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   }, 
+  listElement: {
+    borderBottom: '1px solid #c4c4c4'
+  }
 }
 
 class ChatList extends Component {
@@ -26,7 +29,6 @@ class ChatList extends Component {
   }
 
   render () {
-    console.log(this.state.chats)
     return <List style = {style.listStyle}>
       {this.state.chats.map((chat) => (
         <ChatGroup     
@@ -35,7 +37,8 @@ class ChatList extends Component {
           handleSelect={this.props.handleSelect}/>
       )
       )}
-      <Button>
+      <Button
+        style={{padding: '20px'}} >
         <i className="material-icons">group_add</i>
         Create new Chat
       </Button>
@@ -45,7 +48,9 @@ class ChatList extends Component {
 
 function ChatGroup (props) {
   const chat = props.chat
-  return <ListItem button 
+  return <ListItem 
+    button 
+    style = {style.listElement}
     onClick={ ()=>{
       props.handleSelect(chat)
     }} >

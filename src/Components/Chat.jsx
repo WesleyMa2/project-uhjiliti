@@ -8,17 +8,18 @@ import ChatList from './ChatList'
 const style = {
   main: {
     display: 'flex',
-    padding: '30px'
+    padding: '30px',
   }, 
   chatStyle: {
     display: 'flex',
     flexDirection: 'column',
     padding: '20px',
-    flexGrow: 1
+    flexGrow: 1,
+    borderLeft: '1px solid #c4c4c4'
   },
   messageBoxStyle: {
     overflow: 'auto',
-    height: '65vh',
+    height: '70vh',
   },
   send: {
     display: 'flex',
@@ -60,7 +61,6 @@ class Chat extends Component {
       })
       if (res.data[0]) {
         this.setState({chats: res.data, chatId: res.data[0]._id, messages: res.data[0].messages})
-        this.scrollToBottom()
       } else {
         this.setState({chats: [], chatId: undefined, messages: []})
       }
@@ -82,9 +82,12 @@ class Chat extends Component {
     })
   }
 
-  componentDidUpdate(prevProps){
+  componentDidUpdate(prevProps, prevState){
     if (this.props.currentProject !== prevProps.currentProject) {
       this.getMessages()
+    } 
+    if (this.state.chatId !== prevState.chatId) {
+      this.scrollToBottom()
     }
     // Scroll chatbox if its close to bottom 
     const messageBox = this.refs['messageBox']
@@ -122,7 +125,6 @@ class Chat extends Component {
 
   selectChat(chat) {
     this.setState({messages: chat.messages, chatId: chat._id})
-    this.scrollToBottom()
   }
 
   render() {
