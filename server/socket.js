@@ -27,7 +27,8 @@ function bindServer(http) {
               date: newMessage.date,
               author: newMessage.author,
               content: newMessage.content,
-              chatId: data.chatId
+              chatId: data.chatId,
+              _id: newMessage._id
             }
               
             chat.messages.push(newMessage)

@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import axios from '../axios'
 import ChatList from './ChatList'
+import moment from 'moment'
 
 const style = {
   main: {
@@ -134,7 +135,7 @@ class Chat extends Component {
         <div style={style.chatStyle}>
           <div style={style.messageBoxStyle} ref="messageBox">
             {this.state.messages.map((message) => (
-              <Message key={message._id} author={message.author} content={message.content}/>
+              <Message key={message._id} author={message.author} content={message.content} date={message.date} />
             ))}
           </div> 
           <div style= {style.send}>
@@ -172,12 +173,20 @@ class Chat extends Component {
 }
 
 const messageStyle = {
-  padding: '3px 0px'
+  padding: '3px 0px',
+  display: 'flex',
+  alignItems: 'center',
+  
 } 
 
 function Message (props) {
+  const time = moment(props.date)
   return <div style={messageStyle}>
-    <b>{props.author}</b> : {props.content}
+    <div style={{flexGrow: 1}}><b>{props.author}</b> : {props.content}
+    </div> 
+    <div>
+      {time.format('h:mm:ss A')}
+    </div>
   </div>
 }
 
