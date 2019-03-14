@@ -7,11 +7,14 @@
     background: linear-gradient(to bottom, #c9d6ff, #e2e2e2);
 }
 .board.sc-bdVaJa.jrGeNN {
-    height: 93vh;
+    position: absolute;
+    padding-top: 3.5rem;
+    height: 100%;
 }
 
 #app-container {
-    padding-top: 3rem;
+    position: absolute;
+    height: 100%;
 }
 
 a:hover {
