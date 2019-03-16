@@ -42,6 +42,11 @@ function bindServer(http) {
         })
       }
     })
+    socket.on('disconnect', ()=>{
+      const username = connections[socket.id]
+      delete sessions[username]
+      delete connections[socket.id]
+    })
   })
 }
 

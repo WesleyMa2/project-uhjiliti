@@ -84,6 +84,10 @@ class Chat extends Component {
     })
   }
 
+  componentWillUnmount() {
+    this.socket.disconnect()
+  }
+
   componentDidUpdate(prevProps, prevState){
     if (this.props.currentProject !== prevProps.currentProject) {
       this.getMessages()
