@@ -3,6 +3,7 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Button from '@material-ui/core/Button'
+import NewChatMenu from './NewChatMenu'
 
 const style ={
   listStyle: {
@@ -37,11 +38,7 @@ class ChatList extends Component {
           handleSelect={this.props.handleSelect}/>
       )
       )}
-      <Button
-        style={{padding: '20px'}} >
-        <i className="material-icons">group_add</i>
-        Create new Chat
-      </Button>
+      <NewChatMenu currentProject={this.props.currentProject}/>
     </List>
   }
 }

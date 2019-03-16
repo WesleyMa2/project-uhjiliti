@@ -131,7 +131,7 @@ class Chat extends Component {
   render() {
     return ( 
       <div style={style.main}>
-        <ChatList chats={this.state.chats} handleSelect={(chat)=>this.selectChat(chat)}/>
+        <ChatList chats={this.state.chats} currentProject={this.props.currentProject} handleSelect={(chat)=>this.selectChat(chat)}/>
         <div style={style.chatStyle}>
           <div style={style.messageBoxStyle} ref="messageBox">
             {this.state.messages.map((message) => (
