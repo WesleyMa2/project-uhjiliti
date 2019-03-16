@@ -100,11 +100,13 @@ exports.addUserToProject = [
 ] 
 
 // TODO: determine who can make this action and implement (rn any authenticated user can make)
-// curl -d '{"title":"ticket1", "description":"my first ticket"}' -H "Content-Type: application/json" -b cookie.txt -X POST http://localhost:4000/api/projects/cool%20ass%20project2/tickets
+// curl -d '{"title":"ticket1", "description":"my first ticket"}' -H "Content-Type: application/json" -b cookie.txt -X POST http://localhost:4000/api/projects/cool%20ass%20project2/columns/:columnId/tickets
 exports.createTicket = [
   usersFunctions.isAuthenticated,
   check('title', 'ticketName must not be empty').exists(),
   check('description', 'description must not be empty').exists(),
+  check('assignee', 'assignee must not be empty').exists().isString(),
+  check('watchers', 'watchers must not be empty, and must be an array').exists().isArray(),
   breakIfInvalid,
   sanitizeBody('title').trim().escape(),
   sanitizeBody('description').trim().escape(),
@@ -112,6 +114,10 @@ exports.createTicket = [
     let title = req.body.title
     let description = req.body.description
     let projectId = req.params.projectId
+    let column = req.params.columnId
+    let assignee = req.body.assignee
+    let watchers = req.body.watchers ? req.body.watchers : []
+
 
     // check if a project with _id projectID exists
     Project.findById(projectId, function(err, project) {
@@ -119,13 +125,26 @@ exports.createTicket = [
       if (!project) return res.status(404).end('Project id' + projectId + ' does not exist')
 
       // check if user is a member of the project
-      if(!isProjectAuthenticated(req.session.username, project)) return res.status(401).end('Access denied')
+      if (!isProjectAuthenticated(req.session.username, project)) return res.status(401).end('Access denied')
       
+      // Check assignees and watchers are members of the project
+      if (!isProjectAuthenticated(assignee, project)) return res.status(409).end('Assignee ' + assignee + ' not part of project')
+      watchers = watchers.filter(el => el !== assignee)
+      for (let i = 0; i < watchers.length; i++) {
+        if (!isProjectAuthenticated(watchers[i], project)) return res.status(409).end('Watcher ' + watchers[i] + ' not part of project')
+      } 
+
+      // check if column exists
+      if (!project.columns.includes(column)) return res.status(404).end('Column' + column + ' does not exist')
+
       // make a new ticket
       let newTicket = new Ticket({
         title: title,
         description: description,
-        project: projectId
+        column: column,
+        project: projectId,
+        assignee: assignee,
+        watchers: watchers
       })
 
       // save the ticket 
@@ -138,6 +157,7 @@ exports.createTicket = [
           if (err) return res.status(500).end(err)
 
           // return the newly created ticket
+          console.log('Created ticket')
           res.json(ticket)
         })
       })
