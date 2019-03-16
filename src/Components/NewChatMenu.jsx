@@ -72,11 +72,11 @@ class NewChatMenu extends React.Component{
 
 
 
-  handleClickOpen = () => {
+  handleClickOpen () {
     this.setState({"open" : true});
   };
 
-  handleClose = () => {
+  handleClose () {
     this.setState({"open" : false});
     this.setState({selectedMembers: []});
   };
@@ -113,8 +113,7 @@ class NewChatMenu extends React.Component{
     let chatName = this.state.chatName;
     if (!(/^[\w\-\s]+$/).test(chatName)) {
       return this.setState({error: true, errorMessage: 'Error: Chat name must exist and be alphanumeric.'});
-      return alert('Chat name must exist and be alphanumeric.');
-    } else if (this.state.selectedMembers.length == 0) {
+    } else if (this.state.selectedMembers.length === 0) {
       return this.setState({error: true, errorMessage: 'Error: You must select at least one person.'});
     }
 
@@ -252,10 +251,5 @@ function ErrorText(props) {
     return <div className="center smallError">{props.errorMessage}</div>
   } else return null
 }
-
-function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
-}
-
 
 export default NewChatMenu;
