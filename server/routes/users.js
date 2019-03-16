@@ -25,7 +25,7 @@ const breakIfInvalid = function(req, res, next) {
 }
 
 exports.isAuthenticated = function(req, res, next) {
-  if (!req.session.username) return res.status(401).end('access denied')
+  if (req.session.username == undefined) return res.redirect('/') //return res.status(401).end('access denied')
   next()
 }
 

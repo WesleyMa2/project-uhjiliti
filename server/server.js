@@ -43,20 +43,20 @@ app.use(function (req, res, next){
 socketio.bindServer(http)
 
 // USERS
-app.post('/api/auth/signup/', users.signup)
-app.post('/api/auth/signin/', users.signin)
-app.get('/api/auth/signout/', users.signout)
+app.post('/api/auth/signup', users.signup)
+app.post('/api/auth/signin', users.signin)
+app.get('/api/auth/signout', users.signout)
 app.get('/api/user/projects', users.getProjects)
 
 // PROJECTS
-app.post('/api/projects/', projects.createProject)
-app.post('/api/projects/:projectId/tickets/', projects.createTicket)
-app.post('/api/projects/:projectId/user/', projects.addUserToProject)
+app.post('/api/projects', projects.createProject)
+app.post('/api/projects/:projectId/columns/:columnId/tickets', projects.createTicket)
+app.post('/api/projects/:projectId/user', projects.addUserToProject)
 app.post('/api/projects/:projectId/columns', projects.createColumn)
-app.get('/api/projects/:projectId/', projects.getProject)
+app.get('/api/projects/:projectId', projects.getProject)
 
 // CHATS
-app.post('/api/projects/:projectId/chats/', chats.createChat)
-app.get('/api/projects/:projectId/chats/', chats.getMessages)
+app.post('/api/projects/:projectId/chats', chats.createChat)
+app.get('/api/projects/:projectId/chats', chats.getMessages)
 
 http.listen(port, () => console.log(`Example app listening on port ${port}!`))
