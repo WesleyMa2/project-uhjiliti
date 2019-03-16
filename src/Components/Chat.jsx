@@ -152,7 +152,7 @@ class Chat extends Component {
               variant="contained" 
               color="primary" 
               onClick={this.sendMessage}>
-               Send Message <i className="material-icons">send</i> 
+               Send Message&emsp;<i className="material-icons">send</i> 
             </Button>
             <Button 
               style={style.sendButton}

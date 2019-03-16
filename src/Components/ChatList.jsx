@@ -38,9 +38,8 @@ class ChatList extends Component {
       )
       )}
       <Button
-        style={{padding: '20px'}} >
-        <i className="material-icons">group_add</i>
-        Create new Chat
+        style={{padding: '20px', display: 'flex', justifyContent: 'flexStart'}} >
+        <i className="material-icons">group_add</i>&emsp;Create new Chat 
       </Button>
     </List>
   }
