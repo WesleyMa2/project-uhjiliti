@@ -10,6 +10,7 @@ const style = {
   main: {
     display: 'flex',
     padding: '30px',
+    marginTop: '3em'
   }, 
   chatStyle: {
     display: 'flex',
