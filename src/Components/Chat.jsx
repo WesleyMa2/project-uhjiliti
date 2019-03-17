@@ -80,8 +80,8 @@ class Chat extends Component {
       })
       if (msg.chatId === this.state.chatId) {
         this.setState({ messages: this.state.messages.concat(msg) })
-      } 
-      if (this.state.chats[msg.chatId]) {
+      }
+      if (chatIndex && (chatIndex !== -1)) {
         const newChats = this.state.chats
         newChats[chatIndex].messages =  newChats[chatIndex].messages.concat(msg)
         newChats[chatIndex].lastMessage = trimMessage(msg.content)
