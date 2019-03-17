@@ -4,12 +4,22 @@ import axios from '../axios'
 import AddColForm from './AddColForm'
 
 var Column = (function() {
-  return function item(name) {
+  return function item(name, tickets) {
     this.id = name.replace(' ', '-')
     this.title = name
     this.label = ''
     this.style = {width: 280}
-    this.cards = []
+    this.cards = tickets
+  }
+})()
+
+var Ticket = (function() {
+  return function item(id, name, description, assignee) {
+    this.id = id
+    this.title = name
+    this.label = '10/10/2019'
+    this.description = description
+    this.subtitle = assignee
   }
 })()
 
@@ -25,6 +35,7 @@ class ProjectBoard extends Component {
     }
     this.addColumn = this.addColumn.bind(this)
     this.getColumns = this.getColumns.bind(this)
+    this.getTickets = this.getTickets.bind(this)
 
   }
   componentDidMount(){
@@ -35,11 +46,10 @@ class ProjectBoard extends Component {
   }
 
   addColumn(colName) {
-    console.log(colName)
     axios.post('api/projects/' + this.props.projectId + '/columns/', {columnName: colName})
       .then(res => {
         let newLanes = this.state.boardData.lanes.slice()
-        newLanes.push(new Column(colName))
+        newLanes.push(new Column(colName, []))
         this.setState({boardData: {lanes: newLanes}})
         const board = document.getElementsByClassName('board')[0]
         board.scrollLeft = 30000
@@ -48,14 +58,26 @@ class ProjectBoard extends Component {
   getColumns(){
     axios.get('api/projects/' + this.props.projectId + '/')
       .then(res => {
-        let lanes = res.data.columns.map(el => {
-          return new Column(el)
-        }) 
-        this.setState({boardData: {lanes:lanes }})
+        let lanes = []
+        let promiseArray = res.data.columns.map(el => {          
+          return this.getTickets(el)
+        })
+        Promise.all(promiseArray).then(tickets => {
+          for (let i = 0; i < res.data.columns.length; i++){
+            let trelloTickets = tickets[i].data.map(t => {  
+              return new Ticket(t._id, t.title, t.description, t.assignee)
+            })
+            lanes.push(new Column(res.data.columns[i], trelloTickets))
+          } 
+          this.setState({boardData: {lanes:lanes }})
+        })
       })
       .catch(err => console.error(err))
   }
   
+  getTickets(columnName){
+    return axios.get('api/projects/' + this.props.projectId + '/columns/' + columnName + '/tickets')
+  }
 
   render() {
     return (
