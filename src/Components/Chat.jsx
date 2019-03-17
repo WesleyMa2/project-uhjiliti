@@ -54,6 +54,7 @@ class Chat extends Component {
 
   getMessages() {
     axios.get(`/api/projects/${this.props.currentProject}/chats`).then(res => {
+      console.log(res.data)
       res.data.forEach((chat)=>{
         let lastMessage = 'No messages yet'
         if (chat.messages[0]){
@@ -74,13 +75,19 @@ class Chat extends Component {
     this.socket = io(`${window.origin}`)
     this.socket.emit('authenticate', {username: window.localStorage.getItem('username') } )
     this.socket.on('message', (msg)=> {
-      const chat = this.state.chats.find((chat)=>{
+      const chatIndex = this.state.chats.findIndex((chat)=>{
         return chat._id.valueOf() === msg.chatId.valueOf()
       })
-      chat.messages.concat(msg)
-      chat.lastMessage = msg.content
       if (msg.chatId === this.state.chatId) {
-        this.setState({ messages: this.state.messages.concat(msg), chats: this.state.chats })}
+        this.setState({ messages: this.state.messages.concat(msg) })
+      }
+      const newChats = this.state.chats
+      newChats[chatIndex].messages =  newChats[chatIndex].messages.concat(msg)
+      newChats[chatIndex].lastMessage = msg.content
+      console.log(newChats)
+      this.setState({
+        chats: newChats
+      })
     })
   }
 

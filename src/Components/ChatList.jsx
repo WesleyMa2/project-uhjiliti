@@ -14,33 +14,21 @@ const style ={
   }
 }
 
-class ChatList extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      chats: props.chats
-    }
 
-    
-  }
-
-  componentWillReceiveProps (nextProps) {
-    this.setState({chats: nextProps.chats})
-  }
-
-  render () {
-    return <List style = {style.listStyle}>
-      {this.state.chats.map((chat) => (
-        <ChatGroup     
-          key={chat._id}
-          chat={chat} 
-          handleSelect={this.props.handleSelect}/>
-      )
-      )}
-      <NewChatMenu currentProject={this.props.currentProject}/>
-    </List>
-  }
+function ChatList (props) {
+  console.log(props)
+  return <List style = {style.listStyle}>
+    {props.chats.map((chat) => (
+      <ChatGroup     
+        key={chat._id}
+        chat={chat} 
+        handleSelect={props.handleSelect}/>
+    )
+    )}
+    <NewChatMenu currentProject={props.currentProject}/>
+  </List>
 }
+
 
 function ChatGroup (props) {
   const chat = props.chat
