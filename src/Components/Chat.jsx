@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button'
 import axios from '../axios'
 import ChatList from './ChatList'
 import moment from 'moment'
+import ReactMarkdown  from 'react-markdown'
 
 const style = {
   main: {
@@ -193,7 +194,8 @@ const messageStyle = {
 function Message (props) {
   const time = moment(props.date)
   return <div style={messageStyle}>
-    <div style={{flexGrow: 1}}><b>{props.author}</b> : {props.content}
+    <div style={{flexGrow: 1}}>
+      <b>{props.author}</b> : <ReactMarkdown source={props.content}/>
     </div> 
     <div>
       {time.format('h:mm:ss A')}
