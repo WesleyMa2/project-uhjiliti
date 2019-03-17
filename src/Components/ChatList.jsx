@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -16,7 +16,6 @@ const style ={
 
 
 function ChatList (props) {
-  console.log(props)
   return <List style = {style.listStyle}>
     {props.chats.map((chat) => (
       <ChatGroup     

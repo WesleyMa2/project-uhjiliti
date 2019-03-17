@@ -54,7 +54,6 @@ class Chat extends Component {
 
   getMessages() {
     axios.get(`/api/projects/${this.props.currentProject}/chats`).then(res => {
-      console.log(res.data)
       res.data.forEach((chat)=>{
         let lastMessage = 'No messages yet'
         if (chat.messages[0]){
@@ -84,7 +83,6 @@ class Chat extends Component {
       const newChats = this.state.chats
       newChats[chatIndex].messages =  newChats[chatIndex].messages.concat(msg)
       newChats[chatIndex].lastMessage = msg.content
-      console.log(newChats)
       this.setState({
         chats: newChats
       })
@@ -157,6 +155,7 @@ class Chat extends Component {
               margin="normal"
               variant="outlined"
               onChange = {this.setMessage} 
+              value={this.state.message}
               onKeyPress = {this.handleKeyPress}
             />
             <Button 
