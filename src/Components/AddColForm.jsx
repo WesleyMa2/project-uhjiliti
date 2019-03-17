@@ -8,7 +8,6 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
-import Slide from '@material-ui/core/Slide'
 
 const addColBtnStyle = {
   margin: 0,

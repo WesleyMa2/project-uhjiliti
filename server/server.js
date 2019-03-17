@@ -6,6 +6,7 @@ const cookie = require('cookie')
 const session = require('express-session')
 const users = require('./routes/users')
 const projects = require('./routes/projects')
+const tickets = require('./routes/tickets')
 const chats = require('./routes/chats')
 const http = require('http').Server(app)
 const socketio = require('./socket')
@@ -50,10 +51,11 @@ app.get('/api/user/projects', users.getProjects)
 
 // PROJECTS
 app.post('/api/projects', projects.createProject)
-app.post('/api/projects/:projectId/columns/:columnId/tickets', projects.createTicket)
+app.post('/api/projects/:projectId/columns/:columnId/tickets', tickets.createTicket)
 app.post('/api/projects/:projectId/user', projects.addUserToProject)
-app.post('/api/projects/:projectId/columns', projects.createColumn)
+app.post('/api/projects/:projectId/columns', tickets.createColumn)
 app.get('/api/projects/:projectId', projects.getProject)
+app.get('/api/projects/:projectId/columns/:columnId/tickets', tickets.getTickets)
 
 // CHATS
 app.post('/api/projects/:projectId/chats', chats.createChat)
