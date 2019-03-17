@@ -10,7 +10,8 @@ const style ={
     flexDirection: 'column',
   }, 
   listElement: {
-    borderBottom: '1px solid #c4c4c4'
+    borderBottom: '1px solid #c4c4c4',
+    width: '220px'
   }
 }
 

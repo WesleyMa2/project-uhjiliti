@@ -60,7 +60,7 @@ class Chat extends Component {
         if (chat.messages[0]){
           lastMessage = chat.messages[chat.messages.length - 1].content
         }
-        chat.lastMessage = lastMessage
+        chat.lastMessage = trimMessage(lastMessage)
       })
       if (res.data[0]) {
         this.setState({chats: res.data, chatId: res.data[0]._id, messages: res.data[0].messages})
@@ -80,13 +80,15 @@ class Chat extends Component {
       })
       if (msg.chatId === this.state.chatId) {
         this.setState({ messages: this.state.messages.concat(msg) })
+      } 
+      if (this.state.chats[msg.chatId]) {
+        const newChats = this.state.chats
+        newChats[chatIndex].messages =  newChats[chatIndex].messages.concat(msg)
+        newChats[chatIndex].lastMessage = trimMessage(msg.content)
+        this.setState({
+          chats: newChats
+        })
       }
-      const newChats = this.state.chats
-      newChats[chatIndex].messages =  newChats[chatIndex].messages.concat(msg)
-      newChats[chatIndex].lastMessage = msg.content
-      this.setState({
-        chats: newChats
-      })
     })
   }
 
@@ -203,6 +205,12 @@ function Message (props) {
   </div>
 }
 
+function trimMessage(s) {
+  if(s.length > 25) {
+    s = s.substring(0,24)+'...'
+  }
+  return s
+}
 
 
 export default Chat
