@@ -3,7 +3,7 @@ import { Route, Link, Switch } from 'react-router-dom'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import AppBar from '@material-ui/core/AppBar'
-import Board from './Components/ProjectBoard'
+import Board from './Components/Project Board/ProjectBoard'
 import Chat from './Components/Chat'
 import Typography from '@material-ui/core/Typography'
 import ProjectMenu from './Components/ProjectMenu'
@@ -39,6 +39,7 @@ class App extends React.Component {
     url[2] = value
     const newUrl = url.join('/')
     history.replace(newUrl)
+    localStorage.setItem('currProject', value)
     this.forceUpdate()
   }
 

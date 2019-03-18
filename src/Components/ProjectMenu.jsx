@@ -7,7 +7,6 @@ import axios from '../axios'
 
 const style = {
   padding: '3px',
-  color: 'white'
 }
 
 // Component to list out the projects of the current user
@@ -57,8 +56,8 @@ class ProjectMenu extends React.Component {
     return (
       <div>
         {/* TODO: Make this white  */}
-        <ListItem style={style} button aria-haspopup="true" aria-controls="lock-menu" aria-label="Current Project" onClick={this.handleClickListItem}>
-          <ListItemText style={{textColor: 'white'}} primary="Current Project" secondary={this.state.projects[this.state.selectedIndex]} />
+        <ListItem style={style} button aria-haspopup="true" color="text-secondary" aria-controls="lock-menu" aria-label="Current Project" onClick={this.handleClickListItem}>
+          <ListItemText primary="Current Project" secondary={this.state.projects[this.state.selectedIndex]} />
         </ListItem>
         <Menu id="lock-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
           {this.state.projects.map((option, index) => (
