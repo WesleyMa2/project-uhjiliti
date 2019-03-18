@@ -107,8 +107,8 @@ class Chat extends Component {
     // Scroll chatbox if its close to bottom 
     const messageBox = this.refs['messageBox']
     const currentHeight = messageBox.scrollHeight - messageBox.clientHeight
-    if (messageBox.scrollTop >= currentHeight - 30) {
-      messageBox.scrollTop = currentHeight + 30
+    if (messageBox.scrollTop >= currentHeight - 100) {
+      messageBox.scrollTop = currentHeight + 100
     }
   }
 
