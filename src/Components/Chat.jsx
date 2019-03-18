@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button'
 import axios from '../axios'
 import ChatList from './ChatList'
 import moment from 'moment'
+import ReactMarkdown  from 'react-markdown'
 
 const style = {
   main: {
@@ -59,7 +60,7 @@ class Chat extends Component {
         if (chat.messages[0]){
           lastMessage = chat.messages[chat.messages.length - 1].content
         }
-        chat.lastMessage = lastMessage
+        chat.lastMessage = trimMessage(lastMessage)
       })
       if (res.data[0]) {
         this.setState({chats: res.data, chatId: res.data[0]._id, messages: res.data[0].messages})
@@ -74,14 +75,25 @@ class Chat extends Component {
     this.socket = io(`${window.origin}`)
     this.socket.emit('authenticate', {username: window.localStorage.getItem('username') } )
     this.socket.on('message', (msg)=> {
-      const chat = this.state.chats.find((chat)=>{
+      const chatIndex = this.state.chats.findIndex((chat)=>{
         return chat._id.valueOf() === msg.chatId.valueOf()
       })
-      chat.messages.concat(msg)
-      chat.lastMessage = msg.content
       if (msg.chatId === this.state.chatId) {
-        this.setState({ messages: this.state.messages.concat(msg), chats: this.state.chats })}
+        this.setState({ messages: this.state.messages.concat(msg) })
+      }
+      if (chatIndex && (chatIndex !== -1)) {
+        const newChats = this.state.chats
+        newChats[chatIndex].messages =  newChats[chatIndex].messages.concat(msg)
+        newChats[chatIndex].lastMessage = trimMessage(msg.content)
+        this.setState({
+          chats: newChats
+        })
+      }
     })
+  }
+
+  componentWillUnmount() {
+    this.socket.disconnect()
   }
 
   componentDidUpdate(prevProps, prevState){
@@ -146,6 +158,7 @@ class Chat extends Component {
               margin="normal"
               variant="outlined"
               onChange = {this.setMessage} 
+              value={this.state.message}
               onKeyPress = {this.handleKeyPress}
             />
             <Button 
@@ -183,7 +196,8 @@ const messageStyle = {
 function Message (props) {
   const time = moment(props.date)
   return <div style={messageStyle}>
-    <div style={{flexGrow: 1}}><b>{props.author}</b> : {props.content}
+    <div style={{flexGrow: 1}}>
+      <b>{props.author}</b> : <ReactMarkdown source={props.content}/>
     </div> 
     <div>
       {time.format('h:mm:ss A')}
@@ -191,6 +205,12 @@ function Message (props) {
   </div>
 }
 
+function trimMessage(s) {
+  if(s.length > 25) {
+    s = s.substring(0,24)+'...'
+  }
+  return s
+}
 
 
 export default Chat

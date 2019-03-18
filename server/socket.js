@@ -11,6 +11,7 @@ function bindServer(http) {
   io.on('connection', function(socket){
     socket.on('authenticate', function(data){
       if (data.username) {
+        console.log(`User: ${data.username} connected to chat.`)
         sessions[data.username] = socket.id
         connections[socket.id] = data.username
         socket.on('message', function(data){
@@ -41,6 +42,12 @@ function bindServer(http) {
           })
         })
       }
+    })
+    socket.on('disconnect', ()=>{
+      const username = connections[socket.id]
+      console.log(`User: ${username} disconnect from chat.`)
+      delete sessions[username]
+      delete connections[socket.id]
     })
   })
 }
