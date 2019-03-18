@@ -22,7 +22,7 @@ const style = {
   },
   messageBoxStyle: {
     overflow: 'auto',
-    height: '70vh',
+    height: 'calc(100vh - 180px - 3em)',
   },
   send: {
     display: 'flex',
