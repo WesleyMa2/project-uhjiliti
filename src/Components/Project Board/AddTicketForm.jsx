@@ -35,7 +35,7 @@ export default class AddTicketForm extends React.Component {
       assignee: '',
       watchers: [],
       open: true,
-      members: [],
+      members: []
     }
   }
   componentDidMount() {
@@ -52,13 +52,13 @@ export default class AddTicketForm extends React.Component {
     event.preventDefault()
     let name = event.target.name
     let value = event.target.value
-    this.setState({ [name]: value})
+    this.setState({ [name]: value })
   }
 
   handleSubmit = () => {
     this.setState({ open: false })
-    console.log(this.state);
-    
+    console.log(this.state)
+
     this.props.onAdd(this.state)
   }
 
@@ -93,20 +93,7 @@ export default class AddTicketForm extends React.Component {
       </FormControl>
     )
     const descField = (
-      <TextField
-        required
-        autoFocus
-        margin="dense"
-        name="description"
-        label="Description"
-        multiline
-        rows="3"
-        rowsMax="10"
-        type="text"
-        fullWidth
-        error={this.state.error}
-        onChange={this.handleChange}
-      />
+      <TextField required autoFocus margin="dense" name="description" label="Description" multiline rows="3" rowsMax="10" type="text" fullWidth error={this.state.error} onChange={this.handleChange} />
     )
 
     const watchersSelector = (
@@ -133,40 +120,38 @@ export default class AddTicketForm extends React.Component {
     )
 
     return (
-      <div>
-        <Dialog open={this.state.open} onClose={this.props.handleClose} aria-labelledby="form-dialog-title" fullWidth maxWidth="md">
-          <DialogTitle id="form-dialog-title">New Ticket</DialogTitle>
-          <form autoComplete="off" onSubmit={this.handleSubmit.bind(this)}>
-            <DialogContent>
-              <Grid container spacing={24} justify="space-between" alignItems="flex-end">
-                <Grid item xs={4}>
-                  {titleField}
-                </Grid>
-                <Grid item xs={4}>
-                  {assigneeSelector}
-                </Grid>
-                <Grid item xs={4}>
-                  {datePicker}
-                </Grid>
-                <Grid item xs={12}>
-                  {descField}
-                </Grid>
-                <Grid item xs={12}>
-                  {watchersSelector}
-                </Grid>
+      <Dialog open={this.state.open} onClose={this.props.handleClose} aria-labelledby="form-dialog-title" fullWidth maxWidth="md">
+        <DialogTitle id="form-dialog-title">New Ticket</DialogTitle>
+        <form autoComplete="off" onSubmit={this.handleSubmit.bind(this)}>
+          <DialogContent>
+            <Grid container spacing={24} justify="space-between" alignItems="flex-end">
+              <Grid item xs={4}>
+                {titleField}
               </Grid>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={onCancel} color="primary">
-                Cancel
-              </Button>
-              <Button type="submit" color="primary">
-                Add
-              </Button>
-            </DialogActions>
-          </form>
-        </Dialog>
-      </div>
+              <Grid item xs={4}>
+                {assigneeSelector}
+              </Grid>
+              <Grid item xs={4}>
+                {datePicker}
+              </Grid>
+              <Grid item xs={12}>
+                {descField}
+              </Grid>
+              <Grid item xs={12}>
+                {watchersSelector}
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={onCancel} color="primary">
+              Cancel
+            </Button>
+            <Button type="submit" color="primary">
+              Add
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
     )
   }
 }

@@ -49,8 +49,8 @@ class App extends React.Component {
   }
   // Sets the correct highlighted tab on load
   componentDidMount() {
-    let currPath = window.location.pathname
-    if (currPath.split('/')[2] === '/chat') this.setState({ selectedTab : 4 })
+    let currPath = window.location.pathname    
+    if (currPath.split('/')[3] === 'chat') this.setState({ selectedTab : 4 })
     else this.setState({ selectedTab: 3 }) 
   }
 
@@ -70,10 +70,8 @@ class App extends React.Component {
           </Tabs>
         </AppBar>
         <div id="app-container" ref="board">
-          <Switch>
-            <Route path={'/project/*/board'} render={() => <Board projectId={this.state.currentProject}/>} />
-            <Route path={'/project/*/chat'} exact render={()=> <Chat currentProject={this.state.currentProject}/>} />
-          </Switch>
+          <Route path={'/project/*/board'} render={() => <Board projectId={this.state.currentProject}/>} />
+          <Route path={'/project/*/chat'} exact render={()=> <Chat currentProject={this.state.currentProject}/>} />
         </div>
       </div>
     )

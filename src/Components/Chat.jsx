@@ -6,6 +6,7 @@ import axios from '../axios'
 import ChatList from './ChatList'
 import moment from 'moment'
 import ReactMarkdown  from 'react-markdown'
+import Slide from '@material-ui/core/Slide'
 
 const style = {
   main: {
@@ -143,46 +144,49 @@ class Chat extends Component {
 
   render() {
     return ( 
-      <div style={style.main}>
-        <ChatList chats={this.state.chats} currentProject={this.props.currentProject} handleSelect={(chat)=>this.selectChat(chat)}/>
-        <div style={style.chatStyle}>
-          <div style={style.messageBoxStyle} ref="messageBox">
-            {this.state.messages.map((message) => (
-              <Message key={message._id} author={message.author} content={message.content} date={message.date} />
-            ))}
-          </div> 
-          <div style= {style.send}>
-            <TextField
-              style={ {flexGrow: 1} }
-              refs="messageBox"
-              margin="normal"
-              variant="outlined"
-              onChange = {this.setMessage} 
-              value={this.state.message}
-              onKeyPress = {this.handleKeyPress}
-            />
-            <Button 
-              style={style.sendButton}
-              variant="contained" 
-              color="primary" 
-              onClick={this.sendMessage}>
+      <Slide direction="left" in mountOnEnter >
+        <div style={style.main}>
+          <ChatList chats={this.state.chats} currentProject={this.props.currentProject} handleSelect={(chat)=>this.selectChat(chat)}/>
+          <div style={style.chatStyle}>
+            <div style={style.messageBoxStyle} ref="messageBox">
+              {this.state.messages.map((message) => (
+                <Message key={message._id} author={message.author} content={message.content} date={message.date} />
+              ))}
+            </div> 
+            <div style= {style.send}>
+              <TextField
+                style={ {flexGrow: 1} }
+                refs="messageBox"
+                margin="normal"
+                variant="outlined"
+                onChange = {this.setMessage} 
+                value={this.state.message}
+                onKeyPress = {this.handleKeyPress}
+              />
+              <Button 
+                style={style.sendButton}
+                variant="contained" 
+                color="primary" 
+                onClick={this.sendMessage}>
                Send Message&emsp;<i className="material-icons">send</i> 
-            </Button>
-            <Button 
-              style={style.sendButton}
-              variant="contained" 
-              color="primary">
-              <i className="material-icons">call</i> 
-            </Button>
-            <Button 
-              style={style.sendButton}
-              variant="contained" 
-              color="primary">
-              <i className="material-icons">duo</i> 
-            </Button>
+              </Button>
+              <Button 
+                style={style.sendButton}
+                variant="contained" 
+                color="primary">
+                <i className="material-icons">call</i> 
+              </Button>
+              <Button 
+                style={style.sendButton}
+                variant="contained" 
+                color="primary">
+                <i className="material-icons">duo</i> 
+              </Button>
+            </div>
           </div>
         </div>
-      </div> )
+      </Slide>
+    )
   }
 }
 
