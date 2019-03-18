@@ -82,7 +82,6 @@ exports.createTicket = [
           if (err) return res.status(500).end(err)
 
           // return the newly created ticket
-          console.log('Created ticket')
           res.json(ticket)
         })
       })
