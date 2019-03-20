@@ -2,11 +2,13 @@ import React, { Component } from 'react'
 import io from 'socket.io-client'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
-import axios from '../axios'
+import axios from '../../axios'
 import ChatList from './ChatList'
 import moment from 'moment'
 import ReactMarkdown  from 'react-markdown'
 import Slide from '@material-ui/core/Slide'
+import 'simple-peer'
+import Call from './Call'
 
 const style = {
   main: {
@@ -20,10 +22,6 @@ const style = {
     padding: '20px',
     flexGrow: 1,
     borderLeft: '1px solid #c4c4c4'
-  },
-  messageBoxStyle: {
-    overflow: 'auto',
-    height: 'calc(100vh - 180px - 3em)',
   },
   send: {
     display: 'flex',
@@ -51,6 +49,7 @@ class Chat extends Component {
       chatId: '',
       username: window.localStorage.getItem('username'),
       messages: [],
+      inCall: false
     }     
   }
 
@@ -142,17 +141,36 @@ class Chat extends Component {
     this.setState({messages: chat.messages, chatId: chat._id})
   }
 
+  setCall(boolean) {
+    this.setState({ inCall: boolean})
+  }
+
   render() {
+    let messageBoxStyle, VideoChat
+    if (this.state.inCall) {
+      messageBoxStyle = {
+        overflow: 'auto',
+        height: 'calc(45vh - 180px - 3em)',
+      }
+      VideoChat = <Call></Call>
+    } else {
+      messageBoxStyle = {
+        overflow: 'auto',
+        height: 'calc(100vh - 180px - 3em)',
+      }
+    }
+    const Messages =  <div style={messageBoxStyle} ref="messageBox">
+      {this.state.messages.map((message) => (
+        <Message key={message._id} author={message.author} content={message.content} date={message.date} />
+      ))}
+    </div> 
     return ( 
       <Slide direction="left" in mountOnEnter >
         <div style={style.main}>
           <ChatList chats={this.state.chats} currentProject={this.props.currentProject} handleSelect={(chat)=>this.selectChat(chat)}/>
           <div style={style.chatStyle}>
-            <div style={style.messageBoxStyle} ref="messageBox">
-              {this.state.messages.map((message) => (
-                <Message key={message._id} author={message.author} content={message.content} date={message.date} />
-              ))}
-            </div> 
+            { VideoChat}
+            { Messages }
             <div style= {style.send}>
               <TextField
                 style={ {flexGrow: 1} }
@@ -173,13 +191,15 @@ class Chat extends Component {
               <Button 
                 style={style.sendButton}
                 variant="contained" 
-                color="primary">
+                color="primary"
+                onClick={() => this.setCall(false)}>
                 <i className="material-icons">call</i> 
               </Button>
               <Button 
                 style={style.sendButton}
                 variant="contained" 
-                color="primary">
+                color="primary"
+                onClick={() => this.setCall(true)}>
                 <i className="material-icons">duo</i> 
               </Button>
             </div>
@@ -216,5 +236,8 @@ function trimMessage(s) {
   return s
 }
 
+function getMedia (constraints) {
+  return navigator.mediaDevices.getUserMedia(constraints)
+}
 
 export default Chat

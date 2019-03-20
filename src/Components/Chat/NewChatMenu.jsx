@@ -18,7 +18,7 @@ import deepPurple from '@material-ui/core/colors/deepPurple'
 // import deepRed from "@material-ui/core/colors/deepRed";
 // import deepGreen from "@material-ui/core/colors/deepGreen";
 // import deepBlue from "@material-ui/core/colors/deepBlue";
-import axios from '../axios'
+import axios from '../../axios'
 
 const styles = {
   root: {
