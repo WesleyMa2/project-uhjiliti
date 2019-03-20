@@ -4,6 +4,7 @@ const Message = require('./routes/schemas').Message
 
 const sessions = {}
 const connections = {}
+const calls = {}
 
 function bindServer(http) {
   const io = socketio(http)
@@ -39,6 +40,25 @@ function bindServer(http) {
                 io.to(sessions[member]).emit('message', packet)
               })
             })
+          })
+        })
+        socket.on('joinCall', function(data) {
+          console.log(`${connections[socket.id]} has joined call ${data.chatId}`)
+          if (!calls[data.chatId]) {
+            console.log(`Call ${data.chatId} doesn't exist yet. Creating call.`)
+            calls[data.chatId] = {}
+          }
+          for (const peer in calls[data.chatId]) {
+            const peerId = calls[data.chatId][peer].id
+            io.to(peerId).emit('createPeer', socket.id)
+          }
+          calls[data.chatId][socket.id] = socket
+        })
+        socket.on('signal', function(data) {
+          console.log(`${socket.id}-> ${data.target}`)
+          io.to(data.target).emit('signal', {
+            data: data.data,
+            target: socket.id
           })
         })
       }

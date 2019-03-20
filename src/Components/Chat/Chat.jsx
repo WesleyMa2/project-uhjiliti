@@ -9,6 +9,7 @@ import ReactMarkdown  from 'react-markdown'
 import Slide from '@material-ui/core/Slide'
 import 'simple-peer'
 import Call from './Call'
+import Peer from 'simple-peer'
 
 const style = {
   main: {
@@ -49,8 +50,15 @@ class Chat extends Component {
       chatId: '',
       username: window.localStorage.getItem('username'),
       messages: [],
-      inCall: false
+      inCall: false, 
+      mediaStreams: []
     }     
+
+    this.peers = {}
+    this.mediaPromise = getMedia({
+      video: true,
+      audio: true
+    })
   }
 
   getMessages() {
@@ -90,6 +98,20 @@ class Chat extends Component {
         })
       }
     })
+    this.socket.on('createPeer', (connectionInfo)=>{
+      console.log(`${connectionInfo} joined the room`)
+      this.peers[connectionInfo] = this.createPeer(this.mediaPromise, connectionInfo, true)
+    })
+    this.socket.on('signal', (data)=>{
+      console.log(`${this.socket.id} recieved signal from ${data.target}`)
+      if (!this.peers[data.target]) {
+        this.peers[data.target] = this.createPeer(this.mediaPromise, data.target, false)
+      }
+      this.peers[data.target].then(peer => {
+        console.log('forwarding') 
+        peer.signal(data.data)
+      })
+    })
   }
 
   componentWillUnmount() {
@@ -109,6 +131,24 @@ class Chat extends Component {
     if (messageBox.scrollTop >= currentHeight - 100) {
       messageBox.scrollTop = currentHeight + 100
     }
+  }
+
+  createPeer(mediaPromise, target, initiator) {
+    return mediaPromise.then(stream => {
+      const peer = new Peer({initiator, stream})
+  
+      peer.on('signal', data => {
+        this.socket.emit('signal', {target: target, data})
+      })
+
+      peer.on('stream', (stream)=>{
+        console.log('Recived stream data!!!!!!!! XD')
+        console.log(stream)
+        this.setState({mediaStreams: this.state.mediaStreams.concat(stream)})
+      })
+
+      return peer
+    })
   }
 
   sendMessage() {
@@ -141,18 +181,28 @@ class Chat extends Component {
     this.setState({messages: chat.messages, chatId: chat._id})
   }
 
-  setCall(boolean) {
-    this.setState({ inCall: boolean})
+  joinCall() {
+    this.setState({inCall: true})
+    this.socket.emit('joinCall', {chatId: this.state.chatId})
+  }
+
+  leaveCall() {
+    this.setState({ inCall: false})
+    this.socket.emit('leaveCall')
   }
 
   render() {
     let messageBoxStyle, VideoChat
     if (this.state.inCall) {
+      const callStyle = {
+        height: '65vh',
+        backgroundColor: 'grey'
+      }
       messageBoxStyle = {
         overflow: 'auto',
         height: 'calc(45vh - 180px - 3em)',
       }
-      VideoChat = <Call></Call>
+      VideoChat = <Call style={callStyle} streams={this.state.mediaStreams}></Call>
     } else {
       messageBoxStyle = {
         overflow: 'auto',
@@ -192,14 +242,14 @@ class Chat extends Component {
                 style={style.sendButton}
                 variant="contained" 
                 color="primary"
-                onClick={() => this.setCall(false)}>
+                onClick={() => this.leaveCall()}>
                 <i className="material-icons">call</i> 
               </Button>
               <Button 
                 style={style.sendButton}
                 variant="contained" 
                 color="primary"
-                onClick={() => this.setCall(true)}>
+                onClick={() => this.joinCall()}>
                 <i className="material-icons">duo</i> 
               </Button>
             </div>
@@ -239,5 +289,7 @@ function trimMessage(s) {
 function getMedia (constraints) {
   return navigator.mediaDevices.getUserMedia(constraints)
 }
+
+
 
 export default Chat
