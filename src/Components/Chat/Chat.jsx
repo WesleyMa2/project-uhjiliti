@@ -112,6 +112,9 @@ class Chat extends Component {
         peer.signal(data.data)
       })
     })
+    getMedia({ video: true }).then((media)=> {
+      this.setState({mediaStreams: this.state.mediaStreams.concat(media)})
+    })
   }
 
   componentWillUnmount() {
@@ -194,15 +197,11 @@ class Chat extends Component {
   render() {
     let messageBoxStyle, VideoChat
     if (this.state.inCall) {
-      const callStyle = {
-        height: '65vh',
-        backgroundColor: 'grey'
-      }
       messageBoxStyle = {
         overflow: 'auto',
         height: 'calc(45vh - 180px - 3em)',
       }
-      VideoChat = <Call style={callStyle} streams={this.state.mediaStreams}></Call>
+      VideoChat = <Call streams={this.state.mediaStreams}></Call>
     } else {
       messageBoxStyle = {
         overflow: 'auto',

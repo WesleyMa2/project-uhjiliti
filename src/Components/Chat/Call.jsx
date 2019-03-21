@@ -4,20 +4,24 @@ class Call extends React.Component{
 
   constructor(props) {
     super(props)
-
-    this.state = {
-      video: undefined
-    }
   }
 
   render() {
-    return ( <div>
+    return ( <div style = {videoStyle}>
       {this.props.streams.map((stream) => (
         <Video stream={stream}/>
       ) ) }
     </div> 
     )
   }
+}
+
+const videoStyle = {
+  backgroundColor: 'black',
+  height: '55vh',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center'
 }
 
 class Video extends React.Component{
@@ -27,7 +31,7 @@ class Video extends React.Component{
   }
     
   render () {
-    return <video ref={this.videoRef} style={{backgroundColor: 'black'}} autoPlay></video>
+    return <video ref={this.videoRef} style={{height: '480px', width:'auto'}} autoPlay/>
   } 
 
   componentDidMount() {
