@@ -4,7 +4,7 @@ import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
 import Slide from '@material-ui/core/Slide'
 
-
+// Custom column header
 export const CustomLaneHeader = props => {  
   return (
     <div style={{cursor: 'pointer'}}>
@@ -14,8 +14,8 @@ export const CustomLaneHeader = props => {
     </div>
   )
 }
+// Custom card layout
 export const CustomCard = props => {
-  console.log(props)
   let color = 'textPrimary'
   if (props.assignee === window.localStorage.getItem('username')) color = 'secondary'
   return (

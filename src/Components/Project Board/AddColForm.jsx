@@ -18,7 +18,7 @@ const addColBtnStyle = {
   position: 'fixed'
 }
 
-// Component that provides users a way to add new columns
+// Component that provides users form for adding new columns
 export default class AddColForm extends React.Component {
   constructor(props) {
     super(props)
@@ -29,13 +29,13 @@ export default class AddColForm extends React.Component {
     }
   }
 
+  // Calls makes given request to add column
   onSubmit = event => {
     event.preventDefault()
     if (this.state.value === '') this.setState({ error: true })
     else {
       this.props.onAdd(this.state.value)
       this.setState({ open: false })
-      console.log('adding new col')
     }
   }
 

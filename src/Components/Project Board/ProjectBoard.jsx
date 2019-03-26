@@ -24,6 +24,7 @@ var Ticket = (function() {
     this.description = description
     this.assignee = assignee
     this.watchers = watchers
+    this.metadata = this // Stupid recursive definition necessary for onCardClick
   }
 })()
 
@@ -32,6 +33,7 @@ class ProjectBoard extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      ticketInfoView: false,
       boardData: {
         lanes: []
       }
@@ -44,6 +46,7 @@ class ProjectBoard extends Component {
     if (this.props.projectId !== prevProps.projectId) this.getColumns()
   }
 
+  // Connects to backend to add a column
   addColumn = colName => {
     axios
       .post('api/projects/' + this.props.projectId + '/columns/', { columnName: colName })
@@ -56,6 +59,8 @@ class ProjectBoard extends Component {
       })
       .catch(err => console.error(err))
   }
+
+  // Connects to backend to get column data
   getColumns = () => {
     axios
       .get('api/projects/' + this.props.projectId + '/')
@@ -78,11 +83,14 @@ class ProjectBoard extends Component {
       .catch(err => console.error(err))
   }
 
+  // Connects to backend to get tickets for a column
   getTickets = columnName => {
     return axios.get('api/projects/' + this.props.projectId + '/columns/' + columnName + '/tickets').catch(err => {
       console.error(err)
     })
   }
+
+  // Connects to backend to add a ticket
   addTicket = (card, laneId) => {
     const data = {
       title: card.title,
@@ -94,16 +102,20 @@ class ProjectBoard extends Component {
       console.error(err)
     })
   }
-
   render() {
+    let updateTicket = React.createRef()
     return (
       <div>
+        <AddTicketForm update="true" ref={updateTicket}/>
         <Slide direction="right" in mountOnEnter>
           <AsyncBoard
             className="board"
             data={this.state.boardData}
-            newCardTemplate={<AddTicketForm />}
+            newCardTemplate={<AddTicketForm/>}
             onCardAdd={this.addTicket}
+            onCardClick={(ticketId, metadata, columnId) => {
+              updateTicket.current.showUpdateView(metadata, columnId, this.props.projectId)
+            }}
             customLaneHeader={<CustomLaneHeader />}
             addCardLink={
               <Button color="primary" style={{ paddingBottom: 0 }} size="small">
