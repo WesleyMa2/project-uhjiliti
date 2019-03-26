@@ -34,7 +34,7 @@ exports.isAuthenticated = function(req, res, next) {
 
 // curl -d '{"username":"Test Username", "password":"123", "name":"Test Name"}' -H "Content-Type: application/json" -X POST http://localhost:4000/api/auth/signup/
 exports.signup = [
-  check('username', 'Username must be alphanumeric').exists({checkNull: true, checkFalsy: true}).isAlphanumeric(),
+  check('username', 'Username must be alphanumeric').exists({checkNull: true, checkFalsy: true}).isAlphanumeric().trim(),
   check('password', 'password must be at least 5 characters long').exists().isLength({ min: 5 }),
   check('name', 'Name is required and must not contain special characters').exists({checkNull: true, checkFalsy: true}).matches(/^[a-z0-9 ]+$/i),
   breakIfInvalid,
@@ -72,7 +72,7 @@ exports.signup = [
 
 // curl -c cookie.txt -d '{"username":"Test Username", "password":"123", "name":"Test Name"}' -H "Content-Type: application/json" -X POST http://localhost:4000/api/auth/signin/
 exports.signin = [
-  check('username', 'Username must be alphanumeric').exists({checkNull: true, checkFalsy: true}).isAlphanumeric(),
+  check('username', 'Username must be alphanumeric').exists({checkNull: true, checkFalsy: true}).isAlphanumeric().trim(),
   breakIfInvalid,
   function(req, res) {
     var username = req.body.username

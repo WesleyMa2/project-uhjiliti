@@ -108,9 +108,10 @@ export default class AddTicketForm extends React.Component {
     
     // Input selector for a single assignee
     const assigneeSelector = (
-      <FormControl required fullWidth>
+      // TODO: Make this required
+      <FormControl fullWidth>
         <InputLabel htmlFor="select-assignee">Assign To</InputLabel>
-        <Select value={this.state.assignee} autoWidth name="assignee" onChange={this.handleChange} input={<Input id="select-assignee" />}>
+        <Select required value={this.state.assignee} autoWidth name="assignee" onChange={this.handleChange} input={<Input id="select-assignee" />}>
           {membersToList}
         </Select>
       </FormControl>
@@ -148,7 +149,7 @@ export default class AddTicketForm extends React.Component {
     // Conditional text depending on whether this component is creating or updating
     let submitButtonText = this.props.update ? "Update" : "Add";
     let formTitle = this.props.update ? "Update Ticket" : "New Ticket";
-    
+
     return (
       <Dialog open={this.state.open} onClose={this.props.handleClose} aria-labelledby="form-dialog-title" fullWidth maxWidth="md">
         <DialogTitle id="form-dialog-title">{formTitle}</DialogTitle>

@@ -98,6 +98,7 @@ class ProjectBoard extends Component {
       assignee: card.assignee,
       watchers: card.watchers
     }
+    // Need to make component update 
     axios.post('api/projects/' + this.props.projectId + '/columns/' + laneId + '/tickets', data).catch(err => {
       console.error(err)
     })

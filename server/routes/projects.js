@@ -29,7 +29,7 @@ exports.createProject = [
   check('name', 'Project name must be alphanumeric').exists({checkNull: true, checkFalsy: true}).matches(/^[a-z0-9 ]+$/i),
   breakIfInvalid,
   sanitizeBody('description').trim().escape(),
-  sanitizeBody('name').trim().escape(),
+  sanitizeBody('name').trim(),
   function(req, res) {
 
     let name = req.body.name

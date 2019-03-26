@@ -34,7 +34,7 @@ exports.createTicket = [
   check('watchers', 'watchers must not be empty, and must be an array').exists().isArray(),
   breakIfInvalid,
   sanitizeBody('title').trim().escape(),
-  sanitizeBody('description').trim().escape(),
+  sanitizeBody('description').trim(),
   function(req, res) {
     let title = req.body.title
     let description = req.body.description
