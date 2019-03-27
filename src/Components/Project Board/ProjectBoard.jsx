@@ -1,17 +1,17 @@
-import React, { Component } from 'react'
-import AsyncBoard from 'react-trello'
-import axios from '../../axios'
-import AddColForm from './AddColForm'
-import { CustomLaneHeader, CustomCard } from './CustomCard'
-import Button from '@material-ui/core/Button'
-import AddTicketForm from './AddTicketForm'
-import Slide from '@material-ui/core/Slide'
+import React, { Component } from "react"
+import AsyncBoard from "react-trello"
+import axios from "../../axios"
+import AddColForm from "./AddColForm"
+import { CustomLaneHeader, CustomCard } from "./CustomCard"
+import Button from "@material-ui/core/Button"
+import AddTicketForm from "./AddTicketForm"
+import Slide from "@material-ui/core/Slide"
 
 var Column = (function() {
   return function item(name, tickets) {
     this.id = name
     this.title = name
-    this.style = { paddingBottom: '10px' }
+    this.style = { paddingBottom: "10px" }
     this.cards = tickets
   }
 })()
@@ -20,7 +20,7 @@ var Ticket = (function() {
   return function item(id, name, description, assignee, watchers) {
     this.id = id
     this.title = name
-    this.date = '10/10/2019'
+    this.date = "10/10/2019"
     this.description = description
     this.assignee = assignee
     this.watchers = watchers
@@ -49,12 +49,12 @@ class ProjectBoard extends Component {
   // Connects to backend to add a column
   addColumn = colName => {
     axios
-      .post('api/projects/' + this.props.projectId + '/columns/', { columnName: colName })
+      .post("api/projects/" + this.props.projectId + "/columns/", { columnName: colName })
       .then(res => {
         let newLanes = this.state.boardData.lanes.slice()
         newLanes.push(new Column(colName, []))
         this.setState({ boardData: { lanes: newLanes } })
-        const board = document.getElementsByClassName('board')[0]
+        const board = document.getElementsByClassName("board")[0]
         board.scrollLeft = 30000
       })
       .catch(err => console.error(err))
@@ -63,7 +63,7 @@ class ProjectBoard extends Component {
   // Connects to backend to get column data
   getColumns = () => {
     axios
-      .get('api/projects/' + this.props.projectId + '/')
+      .get("api/projects/" + this.props.projectId + "/")
       .then(res => {
         let lanes = []
         let promiseArray = res.data.columns.map(el => {
@@ -85,9 +85,8 @@ class ProjectBoard extends Component {
 
   // Connects to backend to get tickets for a column
   getTickets = columnName => {
-    return axios.get('api/projects/' + this.props.projectId + '/columns/' + columnName + '/tickets').catch(err => {
-      console.error(err)
-    })
+    return axios.get("api/projects/" + this.props.projectId + "/columns/" + columnName + "/tickets")
+      .catch(err => console.error(err))
   }
 
   // Connects to backend to add a ticket
@@ -98,24 +97,31 @@ class ProjectBoard extends Component {
       assignee: card.assignee,
       watchers: card.watchers
     }
-    // Need to make component update 
-    axios.post('api/projects/' + this.props.projectId + '/columns/' + laneId + '/tickets', data).catch(err => {
-      console.error(err)
-    })
+    // Need to make component update
+    axios.post("api/projects/" + this.props.projectId + "/columns/" + laneId + "/tickets", data)
+      .then(res => this.getColumns())
+      .catch(err => console.error(err))
+  }
+
+  // Connects to backend to update ticket
+  updateTicket = (ticketId, data) => {
+    axios.put("api/projects/" + this.props.projectId + "/tickets/" + ticketId, data)
+      .then(res => this.getColumns())
+      .catch(err => console.error(err))
   }
   render() {
-    let updateTicket = React.createRef()
+    let updateTicketForm = React.createRef()
     return (
       <div>
-        <AddTicketForm update="true" ref={updateTicket}/>
+        <AddTicketForm update="true" onUpdate={this.updateTicket} ref={updateTicketForm} />
         <Slide direction="right" in mountOnEnter>
           <AsyncBoard
             className="board"
             data={this.state.boardData}
-            newCardTemplate={<AddTicketForm/>}
+            newCardTemplate={<AddTicketForm />}
             onCardAdd={this.addTicket}
             onCardClick={(ticketId, metadata, columnId) => {
-              updateTicket.current.showUpdateView(metadata, columnId, this.props.projectId)
+              updateTicketForm.current.showUpdateView(metadata, columnId, this.props.projectId)
             }}
             customLaneHeader={<CustomLaneHeader />}
             addCardLink={
