@@ -31,8 +31,8 @@ export default class AddColForm extends React.Component {
   // Calls makes given request to add column
   onSubmit = event => {
     event.preventDefault()
-      this.props.onAdd(this.state.value)
-      this.setState({ open: false })
+    this.props.onAdd(this.state.value)
+    this.setState({ open: false })
   }
 
   handleOnChange = event => {
