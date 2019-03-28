@@ -11,9 +11,10 @@ const chats = require('./routes/chats')
 const http = require('http').Server(app)
 const socketio = require('./socket')
 require('./database')
+const path = require('path')
 
 app.use(bodyParser.json())
-app.use(express.static('build'))
+app.use(express.static(path.join(__dirname, '../build')))
 
 // populate req with session stuff
 app.use(session({
@@ -60,5 +61,9 @@ app.get('/api/projects/:projectId/columns/:columnId/tickets', tickets.getTickets
 // CHATS
 app.post('/api/projects/:projectId/chats', chats.createChat)
 app.get('/api/projects/:projectId/chats', chats.getMessages)
+
+app.get('*', (req,res) =>{
+  res.sendFile(path.join(__dirname, '../build/index.html'))
+})
 
 http.listen(port, () => console.log(`Example app listening on port ${port}!`))
