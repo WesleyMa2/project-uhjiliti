@@ -60,7 +60,7 @@ class ProjectBoard extends Component {
       .catch(err => console.error(err))
   }
 
-  // Connects to backend to get column data
+  // Connects to backend to get column data ie the tickets
   getColumns = () => {
     axios
       .get("api/projects/" + this.props.projectId + "/")
@@ -81,6 +81,18 @@ class ProjectBoard extends Component {
         })
       })
       .catch(err => console.error(err))
+  }
+
+  // Connects to backend to change order of columns
+  orderColumns = (from, to, payload) => {
+    console.log(from, to)
+    let newCols = this.state.boardData.lanes
+    const colToMove = newCols[from]
+    newCols.splice(from, 1)
+    newCols.splice(to, 0, colToMove)
+    this.setState({ boardData: { lanes: newCols } })
+    const data = {columns: newCols.map(el => {return el.id})}
+    axios.patch("api/projects/" + this.props.projectId + "/columns", data)
   }
 
   // Connects to backend to get tickets for a column
@@ -105,7 +117,7 @@ class ProjectBoard extends Component {
 
   // Connects to backend to update ticket
   updateTicket = (ticketId, data) => {
-    axios.put("api/projects/" + this.props.projectId + "/tickets/" + ticketId, data)
+    axios.patch("api/projects/" + this.props.projectId + "/tickets/" + ticketId, data)
       .then(res => this.getColumns())
       .catch(err => console.error(err))
   }
@@ -118,20 +130,21 @@ class ProjectBoard extends Component {
           <AsyncBoard
             className="board"
             data={this.state.boardData}
+            editable
+            draggable
+            customLaneHeader={<CustomLaneHeader />}
             newCardTemplate={<AddTicketForm />}
             onCardAdd={this.addTicket}
             onCardClick={(ticketId, metadata, columnId) => {
               updateTicketForm.current.showUpdateView(metadata, columnId, this.props.projectId)
             }}
-            customLaneHeader={<CustomLaneHeader />}
             addCardLink={
               <Button color="primary" style={{ paddingBottom: 0 }} size="small">
                 Add Ticket
               </Button>
             }
-            editable
-            draggable
             customCardLayout
+            handleLaneDragEnd={this.orderColumns}
           >
             <CustomCard />
           </AsyncBoard>
