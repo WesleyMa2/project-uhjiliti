@@ -16,7 +16,7 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module'
   },
-  parser: babel-eslint,
+  parser: 'babel-eslint',
   plugins: ['react'],
   rules: {
     indent: ['error', 2],
