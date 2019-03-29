@@ -5,9 +5,10 @@ const Message = require('./routes/schemas').Message
 const sessions = {}
 const connections = {}
 const calls = {}
+let io = {}
 
 function bindServer(http) {
-  const io = socketio(http)
+  io = socketio(http)
 
   io.on('connection', function(socket){
     socket.on('authenticate', function(data){
@@ -55,21 +56,45 @@ function bindServer(http) {
           calls[data.chatId][socket.id] = socket
         })
         socket.on('signal', function(data) {
-          console.log(`${socket.id}-> ${data.target}`)
+          // console.log(`${socket.id}-> ${data.target}`)
           io.to(data.target).emit('signal', {
             data: data.data,
             target: socket.id
           })
+        })
+        socket.on('leaveCall', function() {
+          leaveCall(socket.id)
         })
       }
     })
     socket.on('disconnect', ()=>{
       const username = connections[socket.id]
       console.log(`User: ${username} disconnect from chat.`)
+      leaveCall(socket.id)
       delete sessions[username]
       delete connections[socket.id]
     })
   })
+
+}
+
+function leaveCall(socketId) {
+  const username = connections[socketId]
+  for (const key in calls){
+    const call = calls[key]
+
+    if (call[socketId]) {
+      console.log(`Removing ${username} from call ${key}`)
+      delete call[socketId]
+      for (const connection in call) {
+        io.to(connection).emit('disconnectPeer', socketId)
+      }
+      if (Object.keys(call).length == 0){
+        delete calls[key]
+        console.log(`Call: ${key} is empty. Deleting call`)
+      }
+    }
+  }
 }
 
 module.exports = { bindServer }

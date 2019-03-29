@@ -9,7 +9,6 @@ import ReactMarkdown  from 'react-markdown'
 import Slide from '@material-ui/core/Slide'
 import 'simple-peer'
 import Call from './Call'
-import Peer from 'simple-peer'
 
 const style = {
   main: {
@@ -51,14 +50,7 @@ class Chat extends Component {
       username: window.localStorage.getItem('username'),
       messages: [],
       inCall: false, 
-      mediaStreams: []
     }     
-
-    this.peers = {}
-    this.mediaPromise = getMedia({
-      video: true,
-      audio: true
-    })
   }
 
   getMessages() {
@@ -98,23 +90,8 @@ class Chat extends Component {
         })
       }
     })
-    this.socket.on('createPeer', (connectionInfo)=>{
-      console.log(`${connectionInfo} joined the room`)
-      this.peers[connectionInfo] = this.createPeer(this.mediaPromise, connectionInfo, true)
-    })
-    this.socket.on('signal', (data)=>{
-      console.log(`${this.socket.id} recieved signal from ${data.target}`)
-      if (!this.peers[data.target]) {
-        this.peers[data.target] = this.createPeer(this.mediaPromise, data.target, false)
-      }
-      this.peers[data.target].then(peer => {
-        console.log('forwarding') 
-        peer.signal(data.data)
-      })
-    })
-    getMedia({ video: true }).then((media)=> {
-      this.setState({mediaStreams: this.state.mediaStreams.concat(media)})
-    })
+    
+    
   }
 
   componentWillUnmount() {
@@ -136,23 +113,7 @@ class Chat extends Component {
     }
   }
 
-  createPeer(mediaPromise, target, initiator) {
-    return mediaPromise.then(stream => {
-      const peer = new Peer({initiator, stream})
   
-      peer.on('signal', data => {
-        this.socket.emit('signal', {target: target, data})
-      })
-
-      peer.on('stream', (stream)=>{
-        console.log('Recived stream data!!!!!!!! XD')
-        console.log(stream)
-        this.setState({mediaStreams: this.state.mediaStreams.concat(stream)})
-      })
-
-      return peer
-    })
-  }
 
   sendMessage() {
     if (!this.state.message) return
@@ -201,7 +162,7 @@ class Chat extends Component {
         overflow: 'auto',
         height: 'calc(45vh - 180px - 3em)',
       }
-      VideoChat = <Call streams={this.state.mediaStreams}></Call>
+      VideoChat = <Call  socket={this.socket}></Call>
     } else {
       messageBoxStyle = {
         overflow: 'auto',
@@ -285,9 +246,7 @@ function trimMessage(s) {
   return s
 }
 
-function getMedia (constraints) {
-  return navigator.mediaDevices.getUserMedia(constraints)
-}
+
 
 
 
