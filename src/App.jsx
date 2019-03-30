@@ -10,7 +10,9 @@ import ProjectMenu from './Components/ProjectMenu'
 import createBrowserHistory from 'history/createBrowserHistory'
 import ExitToApp from '@material-ui/icons/ExitToApp'
 import Info from '@material-ui/icons/Info'
-import { IconButton } from '@material-ui/core'
+import IconButton from '@material-ui/core/IconButton'
+import CreateNewFolder from '@material-ui/icons/CreateNewFolder'
+import PersonAdd from '@material-ui/icons/PersonAdd'
 
 const history = createBrowserHistory()
 
@@ -19,6 +21,9 @@ const styles = {
     paddingTop: '10px',
     paddingLeft: '2rem',
     paddingRight: '2rem'
+  },
+  centerTabs: {
+    justifySelf: 'center'
   }
 }
 
@@ -33,6 +38,7 @@ class App extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.setCurrProject = this.setCurrProject.bind(this)
     this.signout = this.signout.bind(this)
+    this.newProject = this.newProject.bind(this)
 
   }
 
@@ -54,8 +60,13 @@ class App extends React.Component {
   // Sets the correct highlighted tab on load
   componentDidMount() {
     let currPath = window.location.pathname    
-    if (currPath.split('/')[3] === 'chat') this.setState({ selectedTab : 4 })
-    else this.setState({ selectedTab: 3 }) 
+    if (currPath.split('/')[3] === 'chat') this.setState({ selectedTab : 5 })
+    else this.setState({ selectedTab: 4 }) 
+  }
+
+  newProject(event) {
+    event.preventDefault()
+    window.location.href = '/newProject'
   }
 
   signout(event) {
@@ -74,10 +85,12 @@ class App extends React.Component {
               Uhjiliti
             </Typography>
             <ProjectMenu onSelect={this.setCurrProject}/>
-            <Tab label="Board" component={Link} to={`/project/${this.state.currentProject}/board`} />
-            <Tab label="Chat" component={Link} to={`/project/${this.state.currentProject}/chat`} />
-            <div style={{ flexGrow: 1 }}></div>
             <IconButton color="inherit"><Info/></IconButton>
+            <IconButton color="inherit"><PersonAdd/></IconButton>            
+            <Tab label="Board" style={styles.centerTabs} component={Link} to={`/project/${this.state.currentProject}/board`} />
+            <Tab label="Chat" style={styles.centerTabs}component={Link} to={`/project/${this.state.currentProject}/chat`} />
+            <div style={{ flexGrow: 1 }}></div>
+            <IconButton onClick={this.newProject} color="inherit"><CreateNewFolder/></IconButton>
             <IconButton onClick={this.signout} color="inherit"><ExitToApp/></IconButton>
           </Tabs>
         </AppBar>
