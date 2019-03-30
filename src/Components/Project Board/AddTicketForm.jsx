@@ -56,7 +56,7 @@ export default class AddTicketForm extends React.Component {
 
   // Opens the component and preloads the given ticketInfo
   showUpdateView = (ticketData, columnId, projectId) => {
-    this.setState({ open: true })
+    this.setState({ open: true, showPreview: true })
     this.setState(ticketData)
     this.componentDidMount()
   }
