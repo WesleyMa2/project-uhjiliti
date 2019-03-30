@@ -26,6 +26,7 @@ const ticketSchema = new Schema({
   project: {type: String, ref: 'Project'},
   column: {type: String},
   description: String,
+  dueDate: {type: Date, default: null},
   assignee: { type: String, ref: 'User' },
   watchers: [{ type: String, ref: 'User' }]
 })
@@ -48,6 +49,3 @@ const chatSchema = new Schema({
 })
 
 exports.Chat = mongoose.model('Chat', chatSchema)
-
-
-

@@ -30,19 +30,25 @@ exports.createTicket = [
   usersFunctions.isAuthenticated,
   check('title', 'ticketName must not be empty').exists(),
   check('description', 'description must not be empty').exists(),
-  check('assignee', 'assignee must not be empty').exists().isString(),
-  check('watchers', 'watchers must not be empty, and must be an array').exists().isArray(),
+  check('assignee', 'assignee must not be empty')
+    .exists()
+    .isString(),
+  check('watchers', 'watchers must not be empty, and must be an array')
+    .exists()
+    .isArray(),
   breakIfInvalid,
-  sanitizeBody('title').trim().escape(),
+  sanitizeBody('title')
+    .trim()
+    .escape(),
   sanitizeBody('description').trim(),
   function(req, res) {
     let title = req.body.title
     let description = req.body.description
+    let dueDate = req.body.dueDate
     let projectId = req.params.projectId
     let column = req.params.columnId
     let assignee = req.body.assignee
     let watchers = req.body.watchers ? req.body.watchers : []
-
 
     // check if a project with _id projectID exists
     Project.findById(projectId, function(err, project) {
@@ -51,13 +57,13 @@ exports.createTicket = [
 
       // check if user is a member of the project
       if (!isProjectAuthenticated(req.session.username, project)) return res.status(401).end('Access denied')
-      
+
       // Check assignees and watchers are members of the project
       if (!isProjectAuthenticated(assignee, project)) return res.status(409).end('Assignee ' + assignee + ' not part of project')
       watchers = watchers.filter(el => el !== assignee)
       for (let i = 0; i < watchers.length; i++) {
         if (!isProjectAuthenticated(watchers[i], project)) return res.status(409).end('Watcher ' + watchers[i] + ' not part of project')
-      } 
+      }
 
       // check if column exists
       if (!project.columns.includes(column)) return res.status(404).end('Column' + column + ' does not exist')
@@ -67,12 +73,13 @@ exports.createTicket = [
         title: title,
         description: description,
         column: column,
+        dueDate: dueDate,
         project: projectId,
         assignee: assignee,
         watchers: watchers
       })
 
-      // save the ticket 
+      // save the ticket
       newTicket.save(function(err, ticket) {
         if (err) return res.status(500).end(err)
 
@@ -98,7 +105,7 @@ exports.createColumn = [
   function(req, res) {
     let projectId = req.params.projectId
     let columnName = req.body.columnName
-    Project.findOneAndUpdate({_id: projectId},{$addToSet: {columns: columnName}}, {new: true}, function(err, project){
+    Project.findOneAndUpdate({ _id: projectId }, { $addToSet: { columns: columnName } }, { new: true }, function(err, project) {
       if (err) return res.status(500).end(err)
       if (!project) return res.status(404).end('Project id' + projectId + ' does not exist')
       return res.json(project)
@@ -108,21 +115,20 @@ exports.createColumn = [
 
 // READ
 
-// TODO: Get the tickets of the giben projectId's columnId
 // api/projects/:projectId/column/:columnId/tickets
 exports.getTickets = [
   usersFunctions.isAuthenticated,
   function(req, res) {
     let projectId = req.params.projectId
     let column = req.params.columnId
-    Project.findById(projectId, function(err, project){
+    Project.findById(projectId, function(err, project) {
       // Various checks
       if (err) return res.status(500).end(err)
       if (!project) return res.status(404).end('Project id' + projectId + ' does not exist')
       if (!isProjectAuthenticated(req.session.username, project)) return res.status(401).end('Access denied')
       if (!project.columns.includes(column)) return res.status(404).end('Column' + column + ' does not exist')
-      
-      Ticket.find({project: projectId, column: column}, function(err, tickets){
+
+      Ticket.find({ project: projectId, column: column }).sort({dueDate: 1}).exec(function(err, tickets) {
         if (err) return res.status(500).end(err)
 
         return res.json(tickets)
@@ -130,8 +136,42 @@ exports.getTickets = [
     })
   }
 ]
+// UPDATE
 
+// /api/projects/:projectId/tickets/:ticketId
+exports.updateTicket = [
+  usersFunctions.isAuthenticated,
+  function(req, res) {
+    let projectId = req.params.projectId
+    let ticketId = req.params.ticketId
+    let assignee = req.body.assignee
+    let watchers = req.body.watchers
 
-function isProjectAuthenticated(username, project){
+    Project.findById(projectId, function(err, project) {
+      // Various checks
+      if (err) return res.status(500).end(err)
+      if (!project) return res.status(404).end('Project id' + projectId + ' does not exist')
+      if (!isProjectAuthenticated(req.session.username, project)) return res.status(401).end('Access denied')
+      let ticketInProject = project.tickets.find(el => {return el == ticketId})
+      if (ticketInProject == undefined) return res.status(404).end('ticket id' + ticketId + ' does not exist')
+      // Check assignees and watchers are members of the project
+      if (assignee) {
+        if (!isProjectAuthenticated(assignee, project)) return res.status(409).end('Assignee ' + assignee + ' not part of project')
+      }
+      if (watchers) {
+        for (let i = 0; i < watchers.length; i++) {
+          if (!isProjectAuthenticated(watchers[i], project)) return res.status(409).end('Watcher ' + watchers[i] + ' not part of project')
+        }
+      }
+
+      Ticket.findByIdAndUpdate(ticketId, { $set: req.body }, function(err, ticket) {
+        if (err) return res.status(500).end(err)
+        return res.json(ticket)
+      })
+    })
+  }
+]
+
+function isProjectAuthenticated(username, project) {
   return project.members.includes(username)
 }
