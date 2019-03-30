@@ -8,6 +8,9 @@ import Chat from './Components/Chat/Chat'
 import Typography from '@material-ui/core/Typography'
 import ProjectMenu from './Components/ProjectMenu'
 import createBrowserHistory from 'history/createBrowserHistory'
+import ExitToApp from '@material-ui/icons/ExitToApp'
+import Info from '@material-ui/icons/Info'
+import { IconButton } from '@material-ui/core'
 
 const history = createBrowserHistory()
 
@@ -29,6 +32,7 @@ class App extends React.Component {
     }
     this.handleChange = this.handleChange.bind(this)
     this.setCurrProject = this.setCurrProject.bind(this)
+    this.signout = this.signout.bind(this)
 
   }
 
@@ -54,6 +58,12 @@ class App extends React.Component {
     else this.setState({ selectedTab: 3 }) 
   }
 
+  signout(event) {
+    event.preventDefault()
+    window.location.replace('/')
+    localStorage.clear()
+  }
+
   render() {
     const { selectedTab } = this.state
     return (
@@ -64,9 +74,11 @@ class App extends React.Component {
               Uhjiliti
             </Typography>
             <ProjectMenu onSelect={this.setCurrProject}/>
-            <div style={{ grow: 1 }}></div>
             <Tab label="Board" component={Link} to={`/project/${this.state.currentProject}/board`} />
             <Tab label="Chat" component={Link} to={`/project/${this.state.currentProject}/chat`} />
+            <div style={{ flexGrow: 1 }}></div>
+            <IconButton color="inherit"><Info/></IconButton>
+            <IconButton onClick={this.signout} color="inherit"><ExitToApp/></IconButton>
           </Tabs>
         </AppBar>
         <div id="app-container" ref="board">

@@ -4,9 +4,14 @@ import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
 import axios from '../axios'
+import Typography from '@material-ui/core/Typography'
+
 
 const style = {
   padding: '3px',
+  white: {
+    color: 'white'
+  }
 }
 
 // Component to list out the projects of the current user
@@ -24,10 +29,11 @@ class ProjectMenu extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('api/user/projects')
-      .then( res => {
+    axios
+      .get('api/user/projects')
+      .then(res => {
         if (res.data.projects.length > 0) {
-          this.setState({projects: res.data.projects})
+          this.setState({ projects: res.data.projects })
           this.props.onSelect(this.state.projects[0])
         }
       })
@@ -37,16 +43,16 @@ class ProjectMenu extends React.Component {
       })
   }
 
-  handleClickListItem (event) {
+  handleClickListItem(event) {
     this.setState({ anchorEl: event.currentTarget })
   }
 
-  handleMenuItemClick (event, index) {
+  handleMenuItemClick(event, index) {
     this.setState({ selectedIndex: index, anchorEl: null })
     this.props.onSelect(this.state.projects[index])
   }
 
-  handleClose () {
+  handleClose() {
     this.setState({ anchorEl: null })
   }
 
@@ -57,7 +63,10 @@ class ProjectMenu extends React.Component {
       <div>
         {/* TODO: Make this white  */}
         <ListItem style={style} button aria-haspopup="true" color="text-secondary" aria-controls="lock-menu" aria-label="Current Project" onClick={this.handleClickListItem}>
-          <ListItemText primary="Current Project" secondary={this.state.projects[this.state.selectedIndex]} />
+          <ListItemText
+            primary={<Typography variant="subtitle1" style={style.white}>Current Project</Typography>}
+            secondary={<Typography variant="caption" style={style.white}>{this.state.projects[this.state.selectedIndex]}</Typography>} 
+          />
         </ListItem>
         <Menu id="lock-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
           {this.state.projects.map((option, index) => (
