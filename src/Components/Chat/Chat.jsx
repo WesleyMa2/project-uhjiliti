@@ -50,6 +50,7 @@ class Chat extends Component {
       username: window.localStorage.getItem('username'),
       messages: [],
       inCall: false, 
+      videoCall: false,
     }     
   }
 
@@ -145,13 +146,13 @@ class Chat extends Component {
     this.setState({messages: chat.messages, chatId: chat._id})
   }
 
-  joinCall() {
-    this.setState({inCall: true})
+  joinCall(isVideoCall) {
+    this.setState({inCall: true, videoCall: isVideoCall})
     this.socket.emit('joinCall', {chatId: this.state.chatId})
   }
 
   leaveCall() {
-    this.setState({ inCall: false})
+    this.setState({ inCall: false, isVideoCall: false})
     this.socket.emit('leaveCall')
   }
 
@@ -162,7 +163,7 @@ class Chat extends Component {
         overflow: 'auto',
         height: 'calc(45vh - 180px - 3em)',
       }
-      VideoChat = <Call  socket={this.socket}></Call>
+      VideoChat = <Call socket={this.socket} videoCall={this.state.videoCall}></Call>
     } else {
       messageBoxStyle = {
         overflow: 'auto',
@@ -198,20 +199,12 @@ class Chat extends Component {
                 onClick={this.sendMessage}>
                Send Message&emsp;<i className="material-icons">send</i> 
               </Button>
-              <Button 
-                style={style.sendButton}
-                variant="contained" 
-                color="primary"
-                onClick={() => this.leaveCall()}>
-                <i className="material-icons">call</i> 
-              </Button>
-              <Button 
-                style={style.sendButton}
-                variant="contained" 
-                color="primary"
-                onClick={() => this.joinCall()}>
-                <i className="material-icons">duo</i> 
-              </Button>
+              <CallButtons 
+              joinCallVideo={()=>this.joinCall(true)}
+              joinCallAudio={()=>this.joinCall(false)}
+              leaveCall={()=>this.leaveCall()}
+              inCall={this.state.inCall}>
+              </CallButtons>
             </div>
           </div>
         </div>
@@ -226,6 +219,37 @@ const messageStyle = {
   alignItems: 'center',
   
 } 
+
+function CallButtons(props) {
+  if (props.inCall === false) {
+    return ( <div>
+      <Button 
+      style={style.sendButton}
+      variant="contained" 
+      color="primary"
+      onClick={props.joinCallAudio}>
+      <i className="material-icons">call</i> 
+    </Button>
+    <Button 
+      style={style.sendButton}
+      variant="contained" 
+      color="primary"
+      onClick={props.joinCallVideo}>
+      <i className="material-icons">video_call</i> 
+    </Button>
+    
+    </div>
+    )
+  } else {
+    return <Button
+    style={style.sendButton}
+    variant="contained" 
+    color="secondary"
+    onClick={props.leaveCall}>
+    Disconnect&emsp;<i className="material-icons">exit_to_app</i> 
+    </Button>
+  }
+}
 
 function Message (props) {
   const time = moment(props.date)
