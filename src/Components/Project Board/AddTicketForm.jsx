@@ -52,7 +52,6 @@ export default class AddTicketForm extends React.Component {
 
   // Opens the component and preloads the given ticketInfo
   showUpdateView = (ticketData, columnId, projectId) => {
-    console.log(ticketData, columnId, projectId)
     this.setState({ open: true })
     this.setState(ticketData)
     this.componentDidMount()
@@ -71,7 +70,7 @@ export default class AddTicketForm extends React.Component {
     event.preventDefault()
     let data = {
       title: this.state.title,
-      date: this.state.date,
+      dueDate: this.state.date,
       description: this.state.description,
       assignee: this.state.assignee,
       watchers: this.state.watchers
@@ -129,7 +128,6 @@ export default class AddTicketForm extends React.Component {
     // Large textfield for description
     const descField = (
       <TextField
-        required
         autoFocus
         margin="dense"
         name="description"

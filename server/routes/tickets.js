@@ -44,6 +44,7 @@ exports.createTicket = [
   function(req, res) {
     let title = req.body.title
     let description = req.body.description
+    let dueDate = req.body.dueDate
     let projectId = req.params.projectId
     let column = req.params.columnId
     let assignee = req.body.assignee
@@ -72,6 +73,7 @@ exports.createTicket = [
         title: title,
         description: description,
         column: column,
+        dueDate: dueDate,
         project: projectId,
         assignee: assignee,
         watchers: watchers
@@ -126,7 +128,7 @@ exports.getTickets = [
       if (!isProjectAuthenticated(req.session.username, project)) return res.status(401).end('Access denied')
       if (!project.columns.includes(column)) return res.status(404).end('Column' + column + ' does not exist')
 
-      Ticket.find({ project: projectId, column: column }, function(err, tickets) {
+      Ticket.find({ project: projectId, column: column }).sort({dueDate: 1}).exec(function(err, tickets) {
         if (err) return res.status(500).end(err)
 
         return res.json(tickets)
@@ -134,7 +136,6 @@ exports.getTickets = [
     })
   }
 ]
-
 // UPDATE
 
 // /api/projects/:projectId/tickets/:ticketId
@@ -151,7 +152,8 @@ exports.updateTicket = [
       if (err) return res.status(500).end(err)
       if (!project) return res.status(404).end('Project id' + projectId + ' does not exist')
       if (!isProjectAuthenticated(req.session.username, project)) return res.status(401).end('Access denied')
-
+      let ticketInProject = project.tickets.find(el => {return el == ticketId})
+      if (ticketInProject == undefined) return res.status(404).end('ticket id' + ticketId + ' does not exist')
       // Check assignees and watchers are members of the project
       if (assignee) {
         if (!isProjectAuthenticated(assignee, project)) return res.status(409).end('Assignee ' + assignee + ' not part of project')
@@ -164,7 +166,6 @@ exports.updateTicket = [
 
       Ticket.findByIdAndUpdate(ticketId, { $set: req.body }, function(err, ticket) {
         if (err) return res.status(500).end(err)
-        if (!ticket) return res.status(404).end('Project id' + ticketId + ' does not exist')
         return res.json(ticket)
       })
     })
