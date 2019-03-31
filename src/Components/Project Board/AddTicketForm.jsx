@@ -18,15 +18,6 @@ import ReactMarkdown from 'react-markdown'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 
-const addColBtnStyle = {
-  margin: 0,
-  top: 'auto',
-  right: 20,
-  bottom: 20,
-  left: 'auto',
-  position: 'fixed'
-}
-
 // Component that handles the UI for adding updating and viewing columns
 export default class AddTicketForm extends React.Component {
   constructor(props) {
@@ -57,6 +48,7 @@ export default class AddTicketForm extends React.Component {
   // Opens the component and preloads the given ticketInfo
   showUpdateView = (ticketData, columnId, projectId) => {
     this.setState({ open: true, showPreview: true })
+    console.log(ticketData)
     this.setState(ticketData)
     this.componentDidMount()
   }
@@ -107,7 +99,7 @@ export default class AddTicketForm extends React.Component {
         label="Due on"
         type="date"
         fullWidth
-        defaultValue={this.state.date}
+        value={this.state.date}
         onChange={this.handleChange}
         InputLabelProps={{
           shrink: true
