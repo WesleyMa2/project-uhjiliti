@@ -32,7 +32,7 @@ export const CustomCard = props => {
   }
   let currDate = new Date()
   let cardDate = new Date(props.date)
-  if ((cardDate - currDate) / (1000 * 3600 * 24) <= 0) cardStyle['backgroundColor'] = red[400]
+  if ((cardDate - currDate) / (1000 * 3600 * 24) <= -1) cardStyle['backgroundColor'] = red[400]
   else if ((cardDate - currDate) / (1000 * 3600 * 24) <= 2) cardStyle['backgroundColor'] = orange[300]
 
 
