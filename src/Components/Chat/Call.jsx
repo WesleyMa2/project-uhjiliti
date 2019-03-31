@@ -13,18 +13,35 @@ class Call extends React.Component{
       mediaStreams: []
     }
 
-    getMedia({ video: true }).then((media)=> {
-      const mediaObject = {
-        stream: media,
-        connectionInfo: this.socket.id
-      }
-      this.setState({mediaStreams: this.state.mediaStreams.concat(mediaObject)})
-    })
+    if (this.props.videoCall){
+      getMedia({ video: true }).then((media)=> {
+        const mediaObject = {
+          stream: media,
+          connectionInfo: this.socket.id
+        }
+        this.setState({mediaStreams: this.state.mediaStreams.concat(mediaObject)})
+      })
+    }
 
-    this.mediaPromise = getMedia({
-      video: true,
-      audio: true
-    })
+    if (this.props.videoCall) {
+      this.mediaPromise = getMedia({
+        video: true,
+        audio: true
+      }).catch(()=> {
+        getMedia({
+          video: true
+        })
+      }).catch(()=> {
+        console.error('No webcam or microphone')
+      }).then()
+    } else {
+      this.mediaPromise = getMedia({
+        audio: true
+      }).catch(()=> {
+        console.error('No microphone')
+      })
+    }
+    
 
     this.socket.on('createPeer', (connectionInfo)=>{
       console.log(`${connectionInfo} joined the room`)
@@ -107,9 +124,22 @@ class Call extends React.Component{
   }
 
   render() {
+    // determine video size
+    let videoSize = {}
+    if (this.state.mediaStreams.length <= 2) {
+      videoSize = {
+        height: '480px',
+        width: '600px'
+      }
+    } else {
+      videoSize = {
+        height: '240px',
+        width: '300px'
+      }
+    }
     return ( <div style = {videoStyle}>
       {this.state.mediaStreams.map((streamObj) => (
-        <Video stream={streamObj.stream}/>
+        <Video key={streamObj.connectionInfo} stream={streamObj.stream} videoSize={videoSize}/>
       ) ) }
     </div> 
     )
@@ -135,7 +165,7 @@ class Video extends React.Component{
   }
     
   render () {
-    return <video ref={this.videoRef} style={{height: '480px', width:'auto'}} autoPlay/>
+    return <video ref={this.videoRef} style={this.props.videoSize} autoPlay/>
   } 
 
   componentDidMount() {

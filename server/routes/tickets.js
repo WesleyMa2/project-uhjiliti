@@ -150,10 +150,10 @@ exports.updateTicket = [
     Project.findById(projectId, function(err, project) {
       // Various checks
       if (err) return res.status(500).end(err)
-      if (!project) return res.status(404).end('Project id' + projectId + ' does not exist')
+      if (!project) return res.status(404).end('Project id ' + projectId + ' does not exist')
       if (!isProjectAuthenticated(req.session.username, project)) return res.status(401).end('Access denied')
       let ticketInProject = project.tickets.find(el => {return el == ticketId})
-      if (ticketInProject == undefined) return res.status(404).end('ticket id' + ticketId + ' does not exist')
+      if (ticketInProject == undefined) return res.status(404).end('ticket id ' + ticketId + ' does not exist')
       // Check assignees and watchers are members of the project
       if (assignee) {
         if (!isProjectAuthenticated(assignee, project)) return res.status(409).end('Assignee ' + assignee + ' not part of project')
@@ -168,6 +168,38 @@ exports.updateTicket = [
         if (err) return res.status(500).end(err)
         return res.json(ticket)
       })
+    })
+  }
+]
+
+// DELETE
+
+// /api/projects/:projectId/tickets/:ticketId
+exports.deleteTicket = [
+  usersFunctions.isAuthenticated,
+  param('ticketId', 'ticketId must be alphanumeric').isAlphanumeric(),
+  breakIfInvalid,
+  function (req, res) {
+    let projectId = req.params.projectId
+    let ticketId = req.params.ticketId
+
+    Project.findById(projectId, function(err, project) {
+      // Various checks
+      if (err) return res.status(500).end(err)
+      if (!project) return res.status(404).end('Project id ' + projectId + ' does not exist')
+      if (!isProjectAuthenticated(req.session.username, project)) return res.status(401).end('Access denied')
+      let ticketInProject = project.tickets.find(el => {return el == ticketId})
+      if (ticketInProject == undefined) return res.status(404).end('ticket id ' + ticketId + ' does not exist')
+
+      project.tickets = project.tickets.filter(el => {return el != ticketId})
+      project.save(function(err){
+        if (err) return res.status(500).end(err)
+        Ticket.deleteOne({_id: ticketId}, function(err){
+          if (err) return res.status(500).end(err)
+          return res.status(200)
+        })
+      })
+      
     })
   }
 ]

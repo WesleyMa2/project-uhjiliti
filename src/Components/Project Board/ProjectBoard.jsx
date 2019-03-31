@@ -130,6 +130,12 @@ class ProjectBoard extends Component {
   moveTicket = (ticketId, sourceLane, targetLane, position, ticketData) => {
     console.log(ticketId, sourceLane, targetLane, position, ticketData)
   }
+
+  deleteTicket = (ticketId, laneId) => {
+    axios.delete('api/projects/' + this.props.projectId + '/tickets/' + ticketId)
+    .then(res => this.getColumns())
+    .catch(err => console.error(err))
+  }
   render() {
     let updateTicketForm = React.createRef()
     return (
@@ -153,6 +159,7 @@ class ProjectBoard extends Component {
                 Add Ticket
               </Button>
             }
+            onCardDelete={this.deleteTicket}
             handleDragEnd={this.moveTicket}
             customCardLayout
             handleLaneDragEnd={this.orderColumn}
