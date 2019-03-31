@@ -5,6 +5,7 @@ import Tab from '@material-ui/core/Tab'
 import AppBar from '@material-ui/core/AppBar'
 import Board from './Components/Project Board/ProjectBoard'
 import Chat from './Components/Chat/Chat'
+import ProjectInfo from './Components/ProjectInfo'
 import Typography from '@material-ui/core/Typography'
 import ProjectMenu from './Components/ProjectMenu'
 import createBrowserHistory from 'history/createBrowserHistory'
@@ -84,12 +85,7 @@ class App extends React.Component {
               Uhjiliti
             </Typography>
             <ProjectMenu onSelect={this.setCurrProject} />
-            <IconButton color="inherit">
-              <Info />
-            </IconButton>
-            <IconButton color="inherit">
-              <PersonAdd />
-            </IconButton>
+            <ProjectInfo currentProject={this.state.currentProject}/>
             <Tab label="Board" style={styles.centerTabs} component={Link} to={`/project/${this.state.currentProject}/board`} />
             <Tab label="Chat" style={styles.centerTabs} component={Link} to={`/project/${this.state.currentProject}/chat`} />
             <div style={{ flexGrow: 1 }} />
