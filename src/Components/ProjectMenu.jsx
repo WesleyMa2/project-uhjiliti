@@ -42,8 +42,9 @@ class ProjectMenu extends React.Component {
         }
       })
       .catch(err => {
-        // TODO: User <SnackBar/> to show error
         console.error(err)
+        console.log(window.location)
+        window.location.href = window.location.origin + '/signin'
       })
   }
 
