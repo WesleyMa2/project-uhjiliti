@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, '../build')))
 
 // populate req with session stuff
 const cookieSession = session({
-  secret: 'jew',
+  secret: process.env.cookiesecret,
   resave: false,
   saveUninitialized: true,
   cookie: {httpOnly: true, secure: true, proxy : true, SameSite: true}, //TODO: switch secure to true when we have HTTPS
