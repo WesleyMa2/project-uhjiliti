@@ -12,7 +12,9 @@ const http = require('http').Server(app)
 const socketio = require('./socket')
 require('./database')
 const path = require('path')
+var enforce = require('express-sslify')
 
+app.use(enforce.HTTPS({ trustProtoHeader: true }))
 app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, '../build')))
 
