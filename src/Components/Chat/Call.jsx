@@ -61,9 +61,11 @@ class Call extends React.Component{
 
     this.socket.on('disconnectPeer', (connectionInfo)=> {
       console.log(`${connectionInfo} left the room`)
-      this.peers[connectionInfo].then(peer => {
-        this.destroyPeer(peer, connectionInfo)
-      })
+      if (this.peers[connectionInfo]) {
+        this.peers[connectionInfo].then(peer => {
+          this.destroyPeer(peer, connectionInfo)
+        })
+      }
     })
   }
 

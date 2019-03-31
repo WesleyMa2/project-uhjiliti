@@ -59,7 +59,7 @@ export default class AddColForm extends React.Component {
           <DialogTitle id="form-dialog-title">New Column</DialogTitle>
           <form onSubmit={this.onSubmit}>
             <DialogContent>
-              <TextField autoFocus required margin="dense" id="name" label="New Column" type="text" fullWidth onChange={this.handleOnChange} />
+              <TextField autoFocus required margin="dense" id="name" label="New Column" type="text" fullwidth onChange={this.handleOnChange} />
             </DialogContent>
             <DialogActions>
               <Button onClick={this.handleClose} color="primary">

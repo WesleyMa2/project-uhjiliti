@@ -149,11 +149,8 @@ export default class ProjectInfo extends React.Component {
         <IconButton color="inherit" onClick={this.handleClickOpen} >
           <Info />
         </IconButton>
-        <IconButton color="inherit" onClick={this.handleClickOpenAddUser} >
-          <PersonAdd />
-        </IconButton>
         <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title" fullWidth="true">
-          <DialogTitle id="form-dialog-title">ProjectInfo</DialogTitle>
+          <DialogTitle id="form-dialog-title">Project Information</DialogTitle>
           <form >
             <DialogContent>
               <TextField 

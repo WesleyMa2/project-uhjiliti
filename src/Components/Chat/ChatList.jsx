@@ -2,6 +2,8 @@ import React from 'react'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import CallIcon from '@material-ui/icons/Call'
 import NewChatMenu from './NewChatMenu'
 
 const style ={
@@ -32,13 +34,24 @@ function ChatList (props) {
 
 function ChatGroup (props) {
   const chat = props.chat
+  let activeCall = null;
+  let customStyle = Object.assign({}, style.listElement); 
+
+  if (chat.callActive) {
+    activeCall = ( <ListItemIcon>
+      <CallIcon />
+    </ListItemIcon>)
+    Object.assign(customStyle, {backgroundColor: '#b3b3ff' })
+  }
+
   return <ListItem 
     button 
-    style = {style.listElement}
+    style = {customStyle}
     onClick={ ()=>{
       props.handleSelect(chat)
     }} >
     <ListItemText primary={chat.name} secondary={chat.lastMessage}/>
+    {activeCall}
   </ListItem>
 }
 

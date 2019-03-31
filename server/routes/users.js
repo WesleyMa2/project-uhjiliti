@@ -80,8 +80,8 @@ exports.signin = [
 
     User.findOne({_id: username}, function(err, user){
       if (err) return res.status(500).end(err)
-      if (!user) return res.status(401).end('access denied')
-      if (user.hash !== generateHash(password, user.salt)) return res.status(401).end('access denied') // invalid password
+      if (!user) return res.status(401).end('Invalid Username')
+      if (user.hash !== generateHash(password, user.salt)) return res.status(401).end('Wrong Password') // invalid password
       // start a session
       console.log('user ' + user._id + ' signed in')
       req.session.username = user._id

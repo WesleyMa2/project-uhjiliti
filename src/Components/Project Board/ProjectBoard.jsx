@@ -11,7 +11,7 @@ var Column = (function() {
   return function item(name, tickets) {
     this.id = name
     this.title = name
-    this.style = { paddingBottom: '10px' }
+    this.style = { paddingBottom: '10px', backgroundColor: '#eeeeee' }
     this.cards = tickets
   }
 })()
@@ -42,7 +42,7 @@ class ProjectBoard extends Component {
     }
   }
   componentDidMount = () => {
-    if (this.props.projectId) this.getColumns()
+    if (this.props.projectId != null) this.getColumns()
   }
   componentDidUpdate = prevProps => {
     if (this.props.projectId !== prevProps.projectId) this.getColumns()
@@ -65,7 +65,7 @@ class ProjectBoard extends Component {
   // Connects to backend to get column data ie the tickets
   getColumns = () => {
     axios
-      .get('api/projects/' + this.props.projectId + '/')
+      .get('api/projects/' + this.props.projectId)
       .then(res => {
         let lanes = []
         let promiseArray = res.data.columns.map(el => {
@@ -172,7 +172,7 @@ class ProjectBoard extends Component {
   render() {
     let updateTicketForm = React.createRef()
     return (
-      <div>
+      <div id="board">
         <AddTicketForm update="true" onUpdate={this.updateTicket} ref={updateTicketForm} />
         <Slide direction="right" in mountOnEnter>
           <Board
