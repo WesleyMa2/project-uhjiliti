@@ -3,10 +3,13 @@
     font-family: 'Roboto', sans-serif;
     scroll-behavior: smooth;
 }
-.board {
-    background: linear-gradient(to bottom, #c9d6ff, #e2e2e2);
-    
+#app-container {
+    background: linear-gradient(to bottom, #d3cce3, #e9e4f0);
 }
+#chat {
+    background: whitesmoke
+}
+
 
 /* react-trello lane shadow */
 .react-trello-board.sc-htpNat.dJewwL{
@@ -18,10 +21,11 @@
 }
 /* react-trello board size */
 .board.sc-bdVaJa.jrGeNN {
+    background: transparent;
     position: absolute;
     padding-top: 3.5rem;
     height: 100%;
-    width: 100%;
+    /* width: 100%; */
 }
 
 .sc-EHOje.cqkFMI {
