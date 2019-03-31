@@ -84,7 +84,10 @@ class ProjectBoard extends Component {
 
         })
       })
-      .catch(err => console.error(err))
+      .catch(err => {
+        window.location.href = window.location.origin + '/signin'
+        console.error(err)
+      })
   }
 
   // Connects to backend to change order of columns

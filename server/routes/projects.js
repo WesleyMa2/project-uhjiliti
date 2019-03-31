@@ -106,6 +106,7 @@ exports.addUserToProject = [
   }
 ]
 
+
 // READ
 
 // TODO: Get the metadata of the given projecct
@@ -148,6 +149,41 @@ exports.orderColumns = [
       project.columns = columns
       project.save().then(project => {return res.json(project)})
         .catch(err => {return res.status(500).end(err)})
+    })
+  }
+]
+
+// DELETE
+// app.delete('/api/projects/:projectId/user')
+exports.removeUserFromProject = [
+  usersFunctions.isAuthenticated,
+  breakIfInvalid,
+  sanitizeBody('username')
+    .trim()
+    .escape(),
+  function(req, res) {
+    let projectId = req.params.projectId
+    Project.findById(projectId, (err, project) => {
+      if (err) return res.status(500).end(err)
+      if (!project) return res.status(404).end('Project id' + projectId + ' does not exist')
+
+      let username = req.session.username
+
+      // check if user is a member of the project
+      if (!isProjectAuthenticated(username, project)) return res.status(401).end('User is not a member of the project')
+
+      // remove user from project's user list
+      let userIndex = project.members.indexOf(username)
+      project.members.splice(userIndex, 1)
+      project.save((err, project) => {
+        if (err) return res.status(500).end(err)
+
+        // remove project from user's project list
+        User.findByIdAndUpdate(username, { $pull: { projects: project._id } }, function(err) {
+          if (err) return res.status(500).end(err)
+          res.end('removed ' + username + ' from ' + projectId)
+        } )
+      })
     })
   }
 ]

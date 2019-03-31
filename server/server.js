@@ -61,6 +61,7 @@ app.get('/api/projects/:projectId/columns/:columnId/tickets', tickets.getTickets
 app.patch('/api/projects/:projectId/tickets/:ticketId', tickets.updateTicket)
 app.patch('/api/projects/:projectId/columns', projects.orderColumns)
 app.delete('/api/projects/:projectId/tickets/:ticketId', tickets.deleteTicket)
+app.delete('/api/projects/:projectId/user', projects.removeUserFromProject)
 
 // CHATS
 app.post('/api/projects/:projectId/chats', chats.createChat)

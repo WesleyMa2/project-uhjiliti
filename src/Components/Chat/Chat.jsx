@@ -69,6 +69,8 @@ class Chat extends Component {
         this.setState({ chats: [], chatId: undefined, messages: [] })
       }
       this.socket.emit('getActiveCalls')
+    }).catch(() => {
+      window.location.href = window.location.origin + '/signin'
     })
   }
 
