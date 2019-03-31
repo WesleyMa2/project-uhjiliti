@@ -12,7 +12,6 @@ import createBrowserHistory from 'history/createBrowserHistory'
 import ExitToApp from '@material-ui/icons/ExitToApp'
 import IconButton from '@material-ui/core/IconButton'
 import CreateNewFolder from '@material-ui/icons/CreateNewFolder'
-
 const history = createBrowserHistory()
 
 const styles = {
@@ -70,6 +69,7 @@ class App extends React.Component {
   signout(event) {
     event.preventDefault()
     window.location.replace('/')
+    localStorage.clear()
   }
 
   render() {

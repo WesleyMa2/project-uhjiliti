@@ -172,7 +172,7 @@ class ProjectBoard extends Component {
   render() {
     let updateTicketForm = React.createRef()
     return (
-      <div id="board">
+      <div>
         <AddTicketForm update="true" onUpdate={this.updateTicket} ref={updateTicketForm} />
         <Slide direction="right" in mountOnEnter>
           <Board
