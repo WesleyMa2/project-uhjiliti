@@ -146,12 +146,17 @@ exports.updateTicket = [
     let ticketId = req.params.ticketId
     let assignee = req.body.assignee
     let watchers = req.body.watchers
+    let columnId = req.body.column
 
     Project.findById(projectId, function(err, project) {
       // Various checks
       if (err) return res.status(500).end(err)
       if (!project) return res.status(404).end('Project id ' + projectId + ' does not exist')
       if (!isProjectAuthenticated(req.session.username, project)) return res.status(401).end('Access denied')
+      if (columnId) {
+        let columnInProject = project.columns.find(el => {return el == columnId})
+        if (columnInProject == undefined) return res.status(404).end('column ' + columnId + ' does not exist')
+      }
       let ticketInProject = project.tickets.find(el => {return el == ticketId})
       if (ticketInProject == undefined) return res.status(404).end('ticket id ' + ticketId + ' does not exist')
       // Check assignees and watchers are members of the project

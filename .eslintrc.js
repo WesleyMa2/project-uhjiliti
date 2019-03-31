@@ -13,7 +13,7 @@ module.exports = {
     ecmaFeatures: {
       jsx: true
     },
-    ecmaVersion: 2018,
+    ecmaVersion: 10,
     sourceType: 'module'
   },
   // parser: 'babel-eslint',
