@@ -18,7 +18,8 @@ import deepPurple from '@material-ui/core/colors/deepPurple'
 import red from '@material-ui/core/colors/red'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import AddUserForm from './AddUserForm'
-
+import PersonAdd from '@material-ui/icons/PersonAdd'
+import ConfirmationDialogButton from './ConfirmationDialogButton'
 
 
 const styles = {
@@ -55,7 +56,7 @@ const styles = {
     backgroundColor: '#607d8b'
   },
   cssRoot: {
-    color: "white",
+    color: 'white',
     backgroundColor: red[600],
     '&:hover': {
       backgroundColor: red[800],
@@ -75,6 +76,11 @@ export default class ProjectInfo extends React.Component {
       open: false,
       openUser: false
     }
+    this.handleClickOpen = this.handleClickOpen.bind(this)
+    this.handleClose = this.handleClose.bind(this)
+    this.handleClickOpenAddUser = this.handleClickOpenAddUser.bind(this)
+    this.addMember = this.addMember.bind(this)
+    this.leaveProject = this.leaveProject.bind(this)
   }
 
   componentDidMount() {
@@ -102,27 +108,37 @@ export default class ProjectInfo extends React.Component {
     })
   }
 
-  handleClickOpen = event => {
+  handleClickOpen(event) {
     event.preventDefault()
     this.setState({ open: true })
   }
 
-  handleClickOpenAddUser = event => {
+  handleClickOpenAddUser(event) {
     event.preventDefault()
     this.setState({ open: true })
     this.setState({ openUser: true})
   }
 
-  handleClose = event => {
+  handleClose(event) {
     event.preventDefault()
     this.setState({ open: false })
+    this.setState({ openUser: false})
   }
 
-  addMember = username => {
+  addMember(username) {
     axios
       .post('api/projects/' + this.props.currentProject + '/user/', { username: username })
-      .then(res => {
+      .then( () => {
         this.getProjectInfo()
+      })
+      .catch(err => alert(err))
+  }
+
+  leaveProject() {
+    axios
+      .delete('api/projects/' + this.props.currentProject + '/user/')
+      .then( () => {
+        window.location.reload()
       })
       .catch(err => alert(err))
   }
@@ -138,48 +154,52 @@ export default class ProjectInfo extends React.Component {
           <form >
             <DialogContent>
               <TextField 
-              disabled
-              InputProps={{
-                readOnly: true,
-              }}
-              margin="dense"
-              id="name" 
-              label="Project Name" 
-              type="text" 
-              value={this.state.projectName} 
-              fullWidth 
-              editable="false"
-              onChange={this.handleOnChange} />
+                InputProps={{
+                  readOnly: true,
+                }}
+                margin="dense"
+                id="name" 
+                label="Project Name" 
+                type="text" 
+                value={this.state.projectName} 
+                fullWidth 
+                editable="false"/>
               <TextField 
-              disabled
-              InputProps={{
-                readOnly: true,
-              }}
-              margin="dense"
-              id="name" 
-              label="Description" 
-              type="text" 
-              value={this.state.description} 
-              fullWidth 
-              editable="false"
-              onChange={this.handleOnChange} />
+                InputProps={{
+                  readOnly: true,
+                }}
+                margin="dense"
+                id="name" 
+                label="Description" 
+                type="text" 
+                value={this.state.description} 
+                fullWidth 
+                editable="false"/>
               <DialogContentText>Members</DialogContentText>
               <List dense>
                 {this.state.members.map(member=> (
                   <MemberItem key={member} 
                     member={member}
                   />
-                  ))
+                ))
                 }
               </List>
             </DialogContent>
             <DialogActions>
-              <AddUserForm onAdd={this.addMember} open={this.state.openUser} />
-              <Button 
-              onClick={this.handleClose} 
-              style={styles.cssRoot}>
-                Leave Project
+              <Button
+                onClick={this.handleClose}
+                color="primary"
+              >
+                Cancel
               </Button>
+              <AddUserForm onAdd={this.addMember} open={this.state.openUser} />
+              <ConfirmationDialogButton 
+                onAgree={this.leaveProject}
+                style={styles.cssRoot}
+                buttonText={'Leave Project'}
+                title={'Leave Project?'}
+                content={'Are you sure you want to leave the project?'}
+              />
             </DialogActions>
           </form>
         </Dialog>
