@@ -11,27 +11,31 @@ const chats = require('./routes/chats')
 const http = require('http').Server(app)
 const socketio = require('./socket')
 require('./database')
+const path = require('path')
+var enforce = require('express-sslify')
 
+app.use(enforce.HTTPS({ trustProtoHeader: true }))
 app.use(bodyParser.json())
-app.use(express.static('build'))
+app.use(express.static(path.join(__dirname, '../build')))
 
 // populate req with session stuff
 const cookieSession = session({
-  secret: 'jew',
+  secret: process.env.cookiesecret,
   resave: false,
   saveUninitialized: true,
-  cookie: {httpOnly: true, secure: false, SameSite: true}, //TODO: switch secure to true when we have HTTPS
+  cookie: {httpOnly: true, secure: true, proxy : true, SameSite: true}, //TODO: switch secure to true when we have HTTPS
 })
 
 app.use(cookieSession)
 
-
+app.enable('trust proxy'); // optional, not needed for secure cookies
 app.use(function(req, res, next){
   var username = (req.session.username)? req.session.username : ''
   res.setHeader('Set-Cookie', cookie.serialize('username', username, {
+    proxy: true,
     path : '/', 
     maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
-    secure: false, //TODO: switch to true when we have HTTPS
+    secure: true, //TODO: switch to true when we have HTTPS
     SameSite: true
   }))
   next()
@@ -66,5 +70,9 @@ app.delete('/api/projects/:projectId/user', projects.removeUserFromProject)
 // CHATS
 app.post('/api/projects/:projectId/chats', chats.createChat)
 app.get('/api/projects/:projectId/chats', chats.getMessages)
+
+app.get('*', (req,res) =>{
+  res.sendFile(path.join(__dirname, '../build/index.html'))
+})
 
 http.listen(port, () => console.log(`Example app listening on port ${port}!`))
