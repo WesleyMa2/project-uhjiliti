@@ -200,10 +200,10 @@ class Chat extends Component {
                Send Message&emsp;<i className="material-icons">send</i> 
               </Button>
               <CallButtons 
-              joinCallVideo={()=>this.joinCall(true)}
-              joinCallAudio={()=>this.joinCall(false)}
-              leaveCall={()=>this.leaveCall()}
-              inCall={this.state.inCall}>
+                joinCallVideo={()=>this.joinCall(true)}
+                joinCallAudio={()=>this.joinCall(false)}
+                leaveCall={()=>this.leaveCall()}
+                inCall={this.state.inCall}>
               </CallButtons>
             </div>
           </div>
@@ -224,28 +224,28 @@ function CallButtons(props) {
   if (props.inCall === false) {
     return ( <div>
       <Button 
-      style={style.sendButton}
-      variant="contained" 
-      color="primary"
-      onClick={props.joinCallAudio}>
-      <i className="material-icons">call</i> 
-    </Button>
-    <Button 
-      style={style.sendButton}
-      variant="contained" 
-      color="primary"
-      onClick={props.joinCallVideo}>
-      <i className="material-icons">video_call</i> 
-    </Button>
+        style={style.sendButton}
+        variant="contained" 
+        color="primary"
+        onClick={props.joinCallAudio}>
+        <i className="material-icons">call</i> 
+      </Button>
+      <Button 
+        style={style.sendButton}
+        variant="contained" 
+        color="primary"
+        onClick={props.joinCallVideo}>
+        <i className="material-icons">video_call</i> 
+      </Button>
     
     </div>
     )
   } else {
     return <Button
-    style={style.sendButton}
-    variant="contained" 
-    color="secondary"
-    onClick={props.leaveCall}>
+      style={style.sendButton}
+      variant="contained" 
+      color="secondary"
+      onClick={props.leaveCall}>
     Disconnect&emsp;<i className="material-icons">exit_to_app</i> 
     </Button>
   }

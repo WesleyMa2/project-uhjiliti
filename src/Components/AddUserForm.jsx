@@ -6,17 +6,6 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import Fab from '@material-ui/core/Fab'
-import AddIcon from '@material-ui/icons/Add'
-
-const addColBtnStyle = {
-  margin: 0,
-  top: 'auto',
-  right: 20,
-  bottom: 20,
-  left: 'auto',
-  position: 'fixed'
-}
 
 // Component that provides users form for adding new columns
 export default class AddUserForm extends React.Component {
@@ -26,26 +15,31 @@ export default class AddUserForm extends React.Component {
       value: '',
       open: props.open || false
     }
+
+    this.handleClickOpen = this.handleClickOpen.bind(this)
+    this.handleClose = this.handleClose.bind(this)
+    this.handleOnChange = this.handleOnChange.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
   }
 
   // Calls makes given request to add column
-  onSubmit = event => {
+  onSubmit(event) {
     event.preventDefault()
     this.props.onAdd(this.state.value)
     this.setState({ open: false })
   }
 
-  handleOnChange = event => {
+  handleOnChange(event) {
     event.preventDefault()
     this.setState({ value: event.target.value})
   }
 
-  handleClickOpen = event => {
+  handleClickOpen(event) {
     event.preventDefault()
     this.setState({ open: true })
   }
 
-  handleClose = event => {
+  handleClose(event) {
     event.preventDefault()
     this.setState({ open: false })
   }
@@ -53,7 +47,7 @@ export default class AddUserForm extends React.Component {
   render() {
     return (
       <div>
-        <Button color="inherit" onClick={this.handleClickOpen} >
+        <Button color="primary" onClick={this.handleClickOpen} >
           Add Member
         </Button>
         <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
