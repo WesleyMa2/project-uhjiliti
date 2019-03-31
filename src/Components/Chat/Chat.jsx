@@ -68,11 +68,11 @@ class Chat extends Component {
       } else {
         this.setState({ chats: [], chatId: undefined, messages: [] })
       }
+      this.socket.emit('getActiveCalls')
     })
   }
 
   componentDidMount() {
-    this.getMessages()
     this.socket = io(`${window.origin}`)
     this.socket.emit('authenticate')
     this.socket.on('message', msg => {
@@ -91,6 +91,16 @@ class Chat extends Component {
         })
       }
     })
+    this.socket.on('callActive', chatId => {
+      console.log(`Call started: ${chatId}`)
+      this.setCallActive(chatId, true)
+     
+    })
+    this.socket.on('callFinished', chatId => {
+      console.log(`Call finished: ${chatId}`)
+      this.setCallActive(chatId, false)
+    })
+    this.getMessages()
   }
 
   componentWillUnmount() {
@@ -150,6 +160,19 @@ class Chat extends Component {
   leaveCall() {
     this.setState({ inCall: false, isVideoCall: false })
     this.socket.emit('leaveCall')
+  }
+
+  setCallActive(callId, status) {
+    const chatIndex = this.state.chats.findIndex(chat => {
+      return chat._id.valueOf() === callId.valueOf()
+    }) 
+    if (chatIndex !== -1) {
+      const newChats = this.state.chats
+      newChats[chatIndex].callActive = status
+      this.setState({
+        chats: newChats
+      })
+    }
   }
 
   render() {

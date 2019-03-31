@@ -22,10 +22,19 @@ function bindServer(http, session) {
         console.log(`User: ${username} connected to chat.`)
         sessions[username] = socket.id
         connections[socket.id] = username
+        socket.on('getActiveCalls', ()=> {
+          Chat.find({members: username}, (_, chats)=>{
+            chats.forEach(chat => {
+              if (calls[chat._id]) {
+                io.to(sessions[username]).emit('callActive', chat._id)
+              }
+            })
+          })
+        })
         socket.on('message', function(data){
           console.log(`Message: ${data.content} recived from ${connections[socket.id]}`)
           Chat.findOne({_id: data.chatId}, function(err, chat){
-            if (err) return console.log(err) // TODO: Handle this
+            if (err) return console.log(err)
             const newMessage = new Message({
               date: Date.now(), 
               author: connections[socket.id],
@@ -42,7 +51,7 @@ function bindServer(http, session) {
               
             chat.messages.push(newMessage)
             chat.save(err =>{
-              if (err) return console.log(err) // TODO: Handle this
+              if (err) return console.log(err) 
               chat.members.forEach((member)=>{
                 io.to(sessions[member]).emit('message', packet)
               })
@@ -53,6 +62,7 @@ function bindServer(http, session) {
           console.log(`${connections[socket.id]} has joined call ${data.chatId}`)
           if (!calls[data.chatId]) {
             console.log(`Call ${data.chatId} doesn't exist yet. Creating call.`)
+            notifyMembersCallStart(data.chatId)
             calls[data.chatId] = {}
           }
           for (const peer in calls[data.chatId]) {
@@ -97,9 +107,36 @@ function leaveCall(socketId) {
       if (Object.keys(call).length == 0){
         delete calls[key]
         console.log(`Call: ${key} is empty. Deleting call`)
+        notifyMembersCallEnd(key)
       }
     }
   }
+}
+
+function notifyMembersCallStart(chatId) {
+  Chat.findById(chatId , (err, chat)=> {
+    if (err) console.err(err)
+    else {
+      chat.members.forEach( member => {
+        if (sessions[member]) {
+          io.to(sessions[member]).emit('callActive', chatId)
+        }
+      })
+    }
+  })
+}
+
+function notifyMembersCallEnd(chatId) {
+  Chat.findById(chatId , (err, chat)=> {
+    if (err) console.err(err)
+    else {
+      chat.members.forEach( member => {
+        if (sessions[member]) {
+          io.to(sessions[member]).emit('callFinished', chatId)
+        }
+      })
+    }
+  }) 
 }
 
 module.exports = { bindServer }
