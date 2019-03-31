@@ -18,15 +18,6 @@ import ReactMarkdown from 'react-markdown'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 
-const addColBtnStyle = {
-  margin: 0,
-  top: 'auto',
-  right: 20,
-  bottom: 20,
-  left: 'auto',
-  position: 'fixed'
-}
-
 // Component that handles the UI for adding updating and viewing columns
 export default class AddTicketForm extends React.Component {
   constructor(props) {
@@ -40,7 +31,8 @@ export default class AddTicketForm extends React.Component {
       watchers: [],
       open: false,
       members: [],
-      showPreview: false
+      showPreview: false,
+      error: false
     }
   }
   componentDidMount() {
@@ -58,7 +50,7 @@ export default class AddTicketForm extends React.Component {
   showUpdateView = (ticketData, columnId, projectId) => {
     this.setState({ open: true, showPreview: true })
     this.setState(ticketData)
-    this.componentDidMount()
+    // this.componentDidMount()
   }
 
   // Takes a field value and sets the corresponding state value
@@ -66,12 +58,16 @@ export default class AddTicketForm extends React.Component {
     event.preventDefault()
     let name = event.target.name
     let value = event.target.value
-    this.setState({ [name]: value })
+    this.setState({ [name]: value})
   }
 
   //
   handleSubmit = event => {
     event.preventDefault()
+    if (this.state.assignee === ''){
+      this.setState({error: true})
+      return
+    }
     let data = {
       title: this.state.title,
       dueDate: this.state.date,
@@ -107,7 +103,7 @@ export default class AddTicketForm extends React.Component {
         label="Due on"
         type="date"
         fullWidth
-        defaultValue={this.state.date}
+        value={this.state.date}
         onChange={this.handleChange}
         InputLabelProps={{
           shrink: true
@@ -122,8 +118,8 @@ export default class AddTicketForm extends React.Component {
     const assigneeSelector = (
       // TODO: Make this required
       <FormControl fullWidth>
-        <InputLabel htmlFor="select-assignee">Assign To</InputLabel>
-        <Select required value={this.state.assignee} autoWidth name="assignee" onChange={this.handleChange} input={<Input id="select-assignee" />}>
+        <InputLabel error={this.state.error} htmlFor="select-assignee">Assign To</InputLabel>
+        <Select value={this.state.assignee} autoWidth name="assignee" onChange={this.handleChange} input={<Input id="select-assignee" />}>
           {membersToList}
         </Select>
       </FormControl>
@@ -151,7 +147,6 @@ export default class AddTicketForm extends React.Component {
         rowsMax="20"
         type="text"
         fullWidth
-        error={this.state.error}
         onChange={this.handleChange}
       />
     )

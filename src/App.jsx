@@ -5,14 +5,13 @@ import Tab from '@material-ui/core/Tab'
 import AppBar from '@material-ui/core/AppBar'
 import Board from './Components/Project Board/ProjectBoard'
 import Chat from './Components/Chat/Chat'
+import ProjectInfo from './Components/ProjectInfo'
 import Typography from '@material-ui/core/Typography'
 import ProjectMenu from './Components/ProjectMenu'
 import createBrowserHistory from 'history/createBrowserHistory'
 import ExitToApp from '@material-ui/icons/ExitToApp'
-import Info from '@material-ui/icons/Info'
 import IconButton from '@material-ui/core/IconButton'
 import CreateNewFolder from '@material-ui/icons/CreateNewFolder'
-import PersonAdd from '@material-ui/icons/PersonAdd'
 
 const history = createBrowserHistory()
 
@@ -43,8 +42,8 @@ class App extends React.Component {
   // Sets the correct highlighted tab on load
   componentDidMount() {
     let currPath = window.location.pathname
-    if (currPath.split('/')[3] === 'chat') this.setState({ selectedTab: 5 })
-    else this.setState({ selectedTab: 4 })
+    if (currPath.split('/')[3] === 'chat') this.setState({ selectedTab: 4 })
+    else this.setState({ selectedTab: 3 })
   }
 
   // Set the current project
@@ -71,7 +70,6 @@ class App extends React.Component {
   signout(event) {
     event.preventDefault()
     window.location.replace('/')
-    localStorage.clear()
   }
 
   render() {
@@ -84,12 +82,7 @@ class App extends React.Component {
               Uhjiliti
             </Typography>
             <ProjectMenu onSelect={this.setCurrProject} />
-            <IconButton color="inherit">
-              <Info />
-            </IconButton>
-            <IconButton color="inherit">
-              <PersonAdd />
-            </IconButton>
+            <ProjectInfo currentProject={this.state.currentProject}/>
             <Tab label="Board" style={styles.centerTabs} component={Link} to={`/project/${this.state.currentProject}/board`} />
             <Tab label="Chat" style={styles.centerTabs} component={Link} to={`/project/${this.state.currentProject}/chat`} />
             <div style={{ flexGrow: 1 }} />

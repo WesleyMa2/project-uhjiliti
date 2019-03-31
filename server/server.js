@@ -17,12 +17,14 @@ app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, '../build')))
 
 // populate req with session stuff
-app.use(session({
+const cookieSession = session({
   secret: 'jew',
   resave: false,
   saveUninitialized: true,
   cookie: {httpOnly: true, secure: true, proxy : true, SameSite: true}, //TODO: switch secure to true when we have HTTPS
-}))
+})
+
+app.use(cookieSession)
 
 app.enable('trust proxy'); // optional, not needed for secure cookies
 app.use(function(req, res, next){
@@ -43,7 +45,7 @@ app.use(function (req, res, next){
   next()
 })
 
-socketio.bindServer(http)
+socketio.bindServer(http, cookieSession)
 
 // USERS
 app.post('/api/auth/signup', users.signup)
@@ -61,6 +63,7 @@ app.get('/api/projects/:projectId/columns/:columnId/tickets', tickets.getTickets
 app.patch('/api/projects/:projectId/tickets/:ticketId', tickets.updateTicket)
 app.patch('/api/projects/:projectId/columns', projects.orderColumns)
 app.delete('/api/projects/:projectId/tickets/:ticketId', tickets.deleteTicket)
+app.delete('/api/projects/:projectId/user', projects.removeUserFromProject)
 
 // CHATS
 app.post('/api/projects/:projectId/chats', chats.createChat)
