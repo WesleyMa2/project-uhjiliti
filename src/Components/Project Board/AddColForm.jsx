@@ -60,7 +60,6 @@ export default class AddColForm extends React.Component {
           <DialogTitle id="form-dialog-title">New Column</DialogTitle>
           <form onSubmit={this.onSubmit}>
             <DialogContent>
-              <DialogContentText>*TEMP* If the column already exists, nothing will happen.</DialogContentText>
               <TextField autoFocus required margin="dense" id="name" label="New Column" type="text" fullWidth onChange={this.handleOnChange} />
             </DialogContent>
             <DialogActions>
