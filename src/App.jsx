@@ -44,8 +44,8 @@ class App extends React.Component {
   // Sets the correct highlighted tab on load
   componentDidMount() {
     let currPath = window.location.pathname
-    if (currPath.split('/')[3] === 'chat') this.setState({ selectedTab: 5 })
-    else this.setState({ selectedTab: 4 })
+    if (currPath.split('/')[3] === 'chat') this.setState({ selectedTab: 4 })
+    else this.setState({ selectedTab: 3 })
   }
 
   // Set the current project
