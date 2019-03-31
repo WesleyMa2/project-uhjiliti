@@ -7,7 +7,6 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import Fab from '@material-ui/core/Fab'
 import IconButton from '@material-ui/core/IconButton'
 import Info from '@material-ui/icons/Info'
 import axios from '../axios'
@@ -19,7 +18,6 @@ import deepPurple from '@material-ui/core/colors/deepPurple'
 import red from '@material-ui/core/colors/red'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import AddUserForm from './AddUserForm'
-import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import PersonAdd from '@material-ui/icons/PersonAdd'
 
 
@@ -136,14 +134,12 @@ export default class ProjectInfo extends React.Component {
         <IconButton color="inherit" onClick={this.handleClickOpen} >
           <Info />
         </IconButton>
-        <IconButton color="inherit" onClick={this.handleClickOpenAddUser} >
-          <PersonAdd />
-        </IconButton>
         <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title" fullWidth="true">
-          <DialogTitle id="form-dialog-title">ProjectInfo</DialogTitle>
+          <DialogTitle id="form-dialog-title">Project Information</DialogTitle>
           <form >
             <DialogContent>
               <TextField 
+              disabled
               InputProps={{
                 readOnly: true,
               }}
@@ -156,6 +152,7 @@ export default class ProjectInfo extends React.Component {
               editable="false"
               onChange={this.handleOnChange} />
               <TextField 
+              disabled
               InputProps={{
                 readOnly: true,
               }}

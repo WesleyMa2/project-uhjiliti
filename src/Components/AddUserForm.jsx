@@ -6,17 +6,6 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import Fab from '@material-ui/core/Fab'
-import AddIcon from '@material-ui/icons/Add'
-
-const addColBtnStyle = {
-  margin: 0,
-  top: 'auto',
-  right: 20,
-  bottom: 20,
-  left: 'auto',
-  position: 'fixed'
-}
 
 // Component that provides users form for adding new columns
 export default class AddUserForm extends React.Component {

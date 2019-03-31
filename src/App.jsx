@@ -10,10 +10,8 @@ import Typography from '@material-ui/core/Typography'
 import ProjectMenu from './Components/ProjectMenu'
 import createBrowserHistory from 'history/createBrowserHistory'
 import ExitToApp from '@material-ui/icons/ExitToApp'
-import Info from '@material-ui/icons/Info'
 import IconButton from '@material-ui/core/IconButton'
 import CreateNewFolder from '@material-ui/icons/CreateNewFolder'
-import PersonAdd from '@material-ui/icons/PersonAdd'
 
 const history = createBrowserHistory()
 

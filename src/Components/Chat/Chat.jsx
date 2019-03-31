@@ -74,7 +74,7 @@ class Chat extends Component {
   componentDidMount() {
     this.getMessages()
     this.socket = io(`${window.origin}`)
-    this.socket.emit('authenticate', { username: window.localStorage.getItem('username') })
+    this.socket.emit('authenticate')
     this.socket.on('message', msg => {
       const chatIndex = this.state.chats.findIndex(chat => {
         return chat._id.valueOf() === msg.chatId.valueOf()
