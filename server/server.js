@@ -21,16 +21,17 @@ app.use(session({
   secret: 'jew',
   resave: false,
   saveUninitialized: true,
-  cookie: {httpOnly: true, secure: false, SameSite: true}, //TODO: switch secure to true when we have HTTPS
+  cookie: {httpOnly: true, secure: true, proxy : true, SameSite: true}, //TODO: switch secure to true when we have HTTPS
 }))
 
-
+app.enable('trust proxy'); // optional, not needed for secure cookies
 app.use(function(req, res, next){
   var username = (req.session.username)? req.session.username : ''
   res.setHeader('Set-Cookie', cookie.serialize('username', username, {
+    proxy: true,
     path : '/', 
     maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
-    secure: false, //TODO: switch to true when we have HTTPS
+    secure: true, //TODO: switch to true when we have HTTPS
     SameSite: true
   }))
   next()

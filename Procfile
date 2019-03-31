@@ -1,1 +1,1 @@
- web: node server/server.js 
+web: echo [Procfile] blah && node server/server.js
