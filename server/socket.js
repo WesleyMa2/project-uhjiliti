@@ -1,21 +1,27 @@
 const socketio = require('socket.io')
 const Chat = require('./routes/schemas').Chat
 const Message = require('./routes/schemas').Message
+const sharedSession = require("express-socket.io-session")
 
 const sessions = {}
 const connections = {}
 const calls = {}
 let io = {}
 
-function bindServer(http) {
+function bindServer(http, session) {
   io = socketio(http)
 
+  console.log(session)
+
+  io.use(sharedSession(session))
+
   io.on('connection', function(socket){
-    socket.on('authenticate', function(data){
-      if (data.username) {
-        console.log(`User: ${data.username} connected to chat.`)
-        sessions[data.username] = socket.id
-        connections[socket.id] = data.username
+    const username = socket.handshake.session.username
+    socket.on('authenticate', function(){
+      if (username) {
+        console.log(`User: ${username} connected to chat.`)
+        sessions[username] = socket.id
+        connections[socket.id] = username
         socket.on('message', function(data){
           console.log(`Message: ${data.content} recived from ${connections[socket.id]}`)
           Chat.findOne({_id: data.chatId}, function(err, chat){
@@ -68,7 +74,6 @@ function bindServer(http) {
       }
     })
     socket.on('disconnect', ()=>{
-      const username = connections[socket.id]
       console.log(`User: ${username} disconnect from chat.`)
       leaveCall(socket.id)
       delete sessions[username]

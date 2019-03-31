@@ -71,7 +71,6 @@ class App extends React.Component {
   signout(event) {
     event.preventDefault()
     window.location.replace('/')
-    localStorage.clear()
   }
 
   render() {

@@ -16,12 +16,14 @@ app.use(bodyParser.json())
 app.use(express.static('build'))
 
 // populate req with session stuff
-app.use(session({
+const cookieSession = session({
   secret: 'jew',
   resave: false,
   saveUninitialized: true,
   cookie: {httpOnly: true, secure: false, SameSite: true}, //TODO: switch secure to true when we have HTTPS
-}))
+})
+
+app.use(cookieSession)
 
 
 app.use(function(req, res, next){
@@ -41,7 +43,7 @@ app.use(function (req, res, next){
   next()
 })
 
-socketio.bindServer(http)
+socketio.bindServer(http, cookieSession)
 
 // USERS
 app.post('/api/auth/signup', users.signup)
