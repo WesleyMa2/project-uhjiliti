@@ -1,0 +1,45 @@
+.loginContainer {
+    height: 100vh;
+    width: 100vw;
+    background-image: url('../resources/business.jpg');
+    background-size: cover;
+}
+
+.loginForm {
+    padding: 50px;
+    margin: auto;
+    width: 400px;
+}
+
+.createProjectForm {
+    padding: 50px;
+    margin:auto;
+}
+
+.center {
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    justify-content: center;
+}
+
+.verticalCenter {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#signin-btn{
+    color: white;
+}
+
+.btn-container {
+    padding-top: 20px;
+    margin-bottom: 20px;
+}
+
+.smallError {
+    color: red;
+    font-size: 13px;
+    padding-bottom: 10px;
+}
