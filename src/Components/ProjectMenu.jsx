@@ -35,7 +35,7 @@ class ProjectMenu extends React.Component {
         if (res.data.projects.length > 0) {
           this.setState({ projects: res.data.projects })
           const urlProject = window.location.pathname.split('/')[2]
-          let projectIndex = this.state.projects.findIndex(el => el == urlProject)
+          let projectIndex = this.state.projects.findIndex(el => el === String(urlProject))
           if (projectIndex === -1) projectIndex = 0
           this.setState({selectedIndex: projectIndex})
           this.props.onSelect(this.state.projects[projectIndex])

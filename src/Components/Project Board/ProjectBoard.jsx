@@ -114,7 +114,7 @@ class ProjectBoard extends Component {
       .then(res => {
         const lanes = JSON.parse(JSON.stringify(this.state.boardData.lanes))
         const index = lanes.findIndex(el => {
-          return el.id == targetLane
+          return el.id === targetLane
         })
         let newData = res.data.map(t => {
           return new Ticket(t._id, t.title, t.description, t.dueDate, t.assignee, t.watchers)
