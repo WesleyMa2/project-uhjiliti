@@ -42,9 +42,9 @@ class NewProject extends Component {
 
   createProject() {
 
-    axios.post('/api/projects/', {name: this.state.name, description: this.state.description}).then(()=>{
-      // FIGURE OUT WHAT TO DO ON POST
-      window.location.href = window.location.origin + '/board'
+    axios.post('/api/projects/', {name: this.state.name, description: this.state.description}).then((res)=>{
+      let project = res.data._id
+      window.location.href = window.location.origin + '/project/' + project + '/board'
     }).catch((err)=>{
       let data = err.response.data
       // if theres a validation error show the messages
