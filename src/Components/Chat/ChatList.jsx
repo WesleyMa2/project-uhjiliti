@@ -27,15 +27,15 @@ function ChatList (props) {
         handleSelect={props.handleSelect}/>
     )
     )}
-    <NewChatMenu currentProject={props.currentProject}/>
+    <NewChatMenu refresh={props.refresh} currentProject={props.currentProject}/>
   </List>
 }
 
 
 function ChatGroup (props) {
   const chat = props.chat
-  let activeCall = null;
-  let customStyle = Object.assign({}, style.listElement); 
+  let activeCall = null
+  let customStyle = Object.assign({}, style.listElement) 
 
   if (chat.callActive) {
     activeCall = ( <ListItemIcon>

@@ -115,10 +115,7 @@ class NewChatMenu extends React.Component{
     } else if (this.state.selectedMembers.length === 0) {
       return this.setState({error: true, errorMessage: 'Error: You must select at least one person.'})
     }
-
     this.createNewChat()
-    // TODO: FIGURE OUT HOW TO force update Chat component
-    console.log(chatName, this.state.selectedMembers)
   }
 
   getMembers() {
@@ -136,6 +133,7 @@ class NewChatMenu extends React.Component{
     // add the current user to the new chat members
     members.push(window.localStorage.getItem('username'))
     axios.post(`/api/projects/${this.props.currentProject}/chats/`, {members: members, name: this.state.chatName}).then(()=>{
+      this.props.refresh()
       return this.handleClose()
     }).catch((err) => {
       let data = err.response.data

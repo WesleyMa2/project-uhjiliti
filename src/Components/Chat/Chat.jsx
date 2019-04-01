@@ -201,7 +201,7 @@ class Chat extends Component {
     return (
       <Slide direction="left" in mountOnEnter>
         <div id="chat" style={style.main}>
-          <ChatList chats={this.state.chats} currentProject={this.props.currentProject} handleSelect={chat => this.selectChat(chat)} />
+          <ChatList chats={this.state.chats} refresh={() => this.getMessages()} currentProject={this.props.currentProject} handleSelect={chat => this.selectChat(chat)} />
           <div style={style.chatStyle}>
             {VideoChat}
             {Messages}
