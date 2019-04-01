@@ -14,28 +14,27 @@ require('./database')
 const path = require('path')
 var enforce = require('express-sslify')
 
-app.use(enforce.HTTPS({ trustProtoHeader: true }))
+// app.use(enforce.HTTPS({ trustProtoHeader: true }))
+
 app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, '../build')))
 
 // populate req with session stuff
 const cookieSession = session({
-  secret: process.env.cookiesecret,
+  secret: 'jew',
   resave: false,
   saveUninitialized: true,
-  cookie: {httpOnly: true, secure: true, proxy : true, SameSite: true}, //TODO: switch secure to true when we have HTTPS
+  cookie: {httpOnly: true, secure: false, SameSite: true}, //TODO: switch secure to true when we have HTTPS
 })
 
 app.use(cookieSession)
 
-app.enable('trust proxy'); // optional, not needed for secure cookies
 app.use(function(req, res, next){
   var username = (req.session.username)? req.session.username : ''
   res.setHeader('Set-Cookie', cookie.serialize('username', username, {
-    proxy: true,
     path : '/', 
     maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
-    secure: true, //TODO: switch to true when we have HTTPS
+    secure: false, //TODO: switch to true when we have HTTPS
     SameSite: true
   }))
   next()

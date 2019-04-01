@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const env = process.env
+const env = require('../env.json')
 
 //Set up default mongoose connection
 const mongoConnectString = `mongodb+srv://system:${env.mongodbpass}@cluster0-lyast.mongodb.net/test?retryWrites=true`
