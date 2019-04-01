@@ -12,6 +12,7 @@ import createBrowserHistory from 'history/createBrowserHistory'
 import ExitToApp from '@material-ui/icons/ExitToApp'
 import IconButton from '@material-ui/core/IconButton'
 import CreateNewFolder from '@material-ui/icons/CreateNewFolder'
+import axios from './axios'
 const history = createBrowserHistory()
 
 const styles = {
@@ -70,6 +71,7 @@ class App extends React.Component {
     event.preventDefault()
     window.location.replace('/')
     localStorage.clear()
+    axios.get('/api/auth/signout/')
   }
 
   render() {
