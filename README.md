@@ -1,7 +1,7 @@
 
 # Project Proposal 
 
-## Project Name: Uhjiliti
+## Project Name: Uhjiliti [LINK](https://uhjiliti.me)
 
 ## Members
 Edgar Sarkisian, Joey Sokolon, Wesley Ma
@@ -29,7 +29,7 @@ A Project management app that combines a ticketing system, video chat, messaging
     - Tickets can have target completion dates.
     - If ticket isn't complete by the deadline, it becomes overdue.
     - Overdue tickets change in appearance and appear at the top of the chart.  
-- Scrum poker
+- Scrum poker (Not Completed)
     - everyone is given a set time to choose a number
     - after time runs out, everyone sees the results
 - Video Chat
