@@ -33,7 +33,7 @@ exports.getMessages = [
 exports.createChat = [
   usersFunctions.isAuthenticated,
   check('name', 'Chat name must be alphanumeric').exists({checkNull: true, checkFalsy: true}),
-  check('members', 'Members must be included').exists().isArray(),
+  check('members', 'Members must be included').exists(),
   breakIfInvalid,
   sanitizeBody('name').trim().escape(),
   function(req, res) {
@@ -52,11 +52,7 @@ exports.createChat = [
 
       // check if users being added are members of the project
       members.forEach(member => {
-        if (member !== null && member !== undefined) {
-          if(!isProjectAuthenticated(member, project)) return res.status(403).end(`Member: ${member} is not a member of this project`)
-        } else {
-          return res.status(404).end('members cannot be null')
-        }
+        if(!isProjectAuthenticated(member, project)) return res.status(403).end(`Member: ${member} is not a member of this project`)
       })
 
       let newChat = new Chat({
