@@ -41,6 +41,7 @@ class SignIn extends Component {
 
   login() {
     axios.post('/api/auth/signin', {username: this.state.username, password: this.state.password}).then(()=>{
+      window.localStorage.setItem('username', this.state.username)
       window.location.href = window.location.origin + '/project/:projectId/board'
     }).catch((err)=>{
       this.setState({error: true, errorMessage: `Error: [${err.response.status}] ${err.response.data}`})
