@@ -5,7 +5,6 @@
 [Sign Out](#sign-Out)  
 [New Project](#new-project)  
 [Add User to Project](#add-user-to-project)  
-[Add User to Project](#add-user-to-project)  
 [Add Column](#add-column)  
 [Create a New Ticket](#create-a-new-ticket)  
 
