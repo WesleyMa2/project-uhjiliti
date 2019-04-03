@@ -3,6 +3,9 @@
 
 ## Project Name: Uhjiliti [LINK](https://uhjiliti.me)
 
+[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/SfDNEVUNfCc/0.jpg)](http://www.youtube.com/watch?v=SfDNEVUNfCc)
+
+
 ## Members
 Edgar Sarkisian, Joey Sokolon, Wesley Ma
 
