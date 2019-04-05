@@ -12,6 +12,8 @@ Edgar Sarkisian, Joey Sokolon, Wesley Ma
 ## Description
 A Project management app that combines a ticketing system, video chat, messaging, and other features commonly used in development projects (scrum poker, project board, etc).
 
+## [API Documentation](/server/docs/README.md)
+
 ## Features:
 ### To be completed by Beta version:
 - Projects setup and user invites
