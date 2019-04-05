@@ -8,6 +8,7 @@
     - [Sign Out](#sign-out)
   - [Projects](#projects)
     - [Project Info](#project-info)
+    - [Get Projects](#get-projects)
     - [New Project](#new-project)
     - [Add User to Project](#add-user-to-project)
     - [Add Column](#add-column)
@@ -18,6 +19,9 @@
     - [Create a New Ticket](#create-a-new-ticket)
     - [Update Ticket](#update-ticket)
     - [Delete ticket](#delete-ticket)
+  - [Chat](#chat)
+    - [Create new Chat](#create-new-chat)
+    - [Get Chats](#get-chats)
 
 
 
@@ -98,6 +102,20 @@
     ```
     curl -b cookie.txt -X GET https://www.uhjiliti.me/api/projects/coolproject
     ```
+### Get Projects
+- description: gets a list of project names user is a member of
+- request: `GET /api/user/projects`
+- response: 200
+    - content-type: `application/json`
+    - body: Array of project names
+        - (string): name of the project
+- response: 401
+    - current user not authenticated
+
+    ```
+    curl -b cookie.txt -X GET https://www.uhjiliti.me/api/user/projects
+    ```
+
 ### New Project
 - description: make a new project   
     returns a 422 if invalid parameters  
@@ -318,4 +336,50 @@
     - ticketId not found
     ```
     curl -b cookie.txt -X PATCH https://www.uhjiliti.me/api/projects/coolproject/tickets/5c9ff5cf7c8b646060d23891
+    ```
+
+## Chat
+### Create New Chat
+- description: Create a new chat for a given project
+- request `POST /api/projects/:projectId/chats`
+- response: 200
+    - content-type: `application/json`
+    - body: `chat` object that was created
+        - \_id: (string) id of the chat
+        - name: (string) name of the chat
+        - members: (list of strings) list of usernames of members involved in this chat
+        - messages: (list of messages) list of messages in the chat
+        - projectId: (String) id of the project this chat belongs to
+- response: 422
+    - content-type: `application/json`
+    - body: list of `error` objects
+        - location: (string) where the invalid parameters is in the http request (will always be `body`)
+        - param: (string) which key in the request body had an invalid value
+        - msg: (string) error message describing invalid reason for invalid parameter
+- response: 401
+    - current user not part of project
+- response: 403
+    - one of the members of chat is not a member of the project
+- response: 404
+    - project can't be found
+    ```
+    curl -d '{"members": ["a", "Sokojoe"], "name": "new chat"}' -H "Content-Type: application/json" -b cookie.txt -X POST https://www.uhjiliti.me/api/projects/coolproject/chats/
+    ```
+
+### Get Chats
+
+- description: Get all chats for a given project and user
+- request `GET /api/projects/:projectId/chats`
+- response: 200
+    - content-type: `application/json`
+    - body: Array of chat objects
+        - \_id: (string) id of the chat
+        - name: (string) name of the chat
+        - members: (list of strings) list of usernames of members involved in this chat
+        - messages: (list of messages) list of messages in the chat
+        - projectId: (String) id of the project this chat belongs to
+- response: 401
+    - current user not part of project
+    ```
+    curl -b cookie.txt -X GET https://www.uhjiliti.me/api/projects/coolproject/chats/
     ```
