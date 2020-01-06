@@ -1,7 +1,7 @@
 
 # Project Proposal 
 
-## Project Name: Uhjiliti [LINK](https://www.uhjiliti.me/)
+## Project Name: Uhjiliti [LINK](https://uhjiliti.herokuapp.com/)
 
 [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/SfDNEVUNfCc/0.jpg)](http://www.youtube.com/watch?v=SfDNEVUNfCc)
 
